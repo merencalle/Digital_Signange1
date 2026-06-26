@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DigitalSignage.WindowsPlayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da7dde6c9a07a63bc1e035dee6dfd532096ce18d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dff614dd84478185699af86512c4ae4a7a5494b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("DigitalSignage.WindowsPlayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DigitalSignage.WindowsPlayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
