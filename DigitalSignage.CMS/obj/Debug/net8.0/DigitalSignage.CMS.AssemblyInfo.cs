@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DigitalSignage.CMS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dff614dd84478185699af86512c4ae4a7a5494b2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5176dcd273ad01b12a81f52e0992c3f9d040b5ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("DigitalSignage.CMS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DigitalSignage.CMS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

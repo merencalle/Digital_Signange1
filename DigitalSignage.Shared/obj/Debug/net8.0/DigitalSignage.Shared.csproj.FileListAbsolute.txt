@@ -10,3 +10,15 @@ D:\DBAPP\DigitalSignage\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Sh
 D:\DBAPP\DigitalSignage\DigitalSignage.Shared\obj\Debug\net8.0\refint\DigitalSignage.Shared.dll
 D:\DBAPP\DigitalSignage\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.pdb
 D:\DBAPP\DigitalSignage\DigitalSignage.Shared\obj\Debug\net8.0\ref\DigitalSignage.Shared.dll
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\bin\Debug\net8.0\DigitalSignage.Shared.deps.json
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\bin\Debug\net8.0\DigitalSignage.Shared.dll
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\bin\Debug\net8.0\DigitalSignage.Shared.pdb
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.AssemblyInfoInputs.cache
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.AssemblyInfo.cs
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.csproj.CoreCompileInputs.cache
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.sourcelink.json
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.dll
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\refint\DigitalSignage.Shared.dll
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\DigitalSignage.Shared.pdb
+D:\ELG Digital Signage\Digital_Signange\DigitalSignage.Shared\obj\Debug\net8.0\ref\DigitalSignage.Shared.dll
