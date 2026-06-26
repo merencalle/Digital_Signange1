@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DigitalSignage.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+534ef9dd5a45d6e74b6f32c9f57d1ca8bc4a7797")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da7dde6c9a07a63bc1e035dee6dfd532096ce18d")]
 [assembly: System.Reflection.AssemblyProductAttribute("DigitalSignage.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DigitalSignage.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
