@@ -1,0 +1,32 @@
+@page
+@model DigitalSignage.CMS.Pages.Devices.CreateModel
+@{
+    ViewData["Title"] = "Add Device";
+}
+
+<h1>Add Device</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Device.Name" class="form-label"></label>
+        <input asp-for="Device.Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Device.DeviceType" class="form-label"></label>
+        <input asp-for="Device.DeviceType" class="form-control" placeholder="NUC, Pi5, Samsung, Cisco" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Device.Location" class="form-label"></label>
+        <input asp-for="Device.Location" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Device.IpAddress" class="form-label"></label>
+        <input asp-for="Device.IpAddress" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Device.UniqueId" class="form-label"></label>
+        <input asp-for="Device.UniqueId" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

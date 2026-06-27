@@ -1,0 +1,43 @@
+@page
+@model DigitalSignage.CMS.Pages.Devices.IndexModel
+@{
+    ViewData["Title"] = "Devices";
+}
+
+<h1>Devices</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Add Device</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>IP Address</th>
+            <th>Last Heartbeat</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var device in Model.Devices)
+{
+        <tr>
+            <td>@device.Name</td>
+            <td>@device.DeviceType</td>
+            <td>@device.Location</td>
+            <td>@device.Status</td>
+            <td>@device.IpAddress</td>
+            <td>@device.LastHeartbeat</td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@device.Id" class="btn btn-sm btn-secondary">Edit</a>
+                <a asp-page="Details" asp-route-id="@device.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-page="Delete" asp-route-id="@device.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

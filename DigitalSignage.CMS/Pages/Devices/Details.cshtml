@@ -1,0 +1,33 @@
+@page "{id:int}"
+@model DigitalSignage.CMS.Pages.Devices.DetailsModel
+@{
+    ViewData["Title"] = "Device Details";
+}
+
+<h1>Device Details</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Device.Name</dd>
+
+    <dt class="col-sm-3">Type</dt>
+    <dd class="col-sm-9">@Model.Device.DeviceType</dd>
+
+    <dt class="col-sm-3">Location</dt>
+    <dd class="col-sm-9">@Model.Device.Location</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">@Model.Device.Status</dd>
+
+    <dt class="col-sm-3">IP Address</dt>
+    <dd class="col-sm-9">@Model.Device.IpAddress</dd>
+
+    <dt class="col-sm-3">Unique Id</dt>
+    <dd class="col-sm-9">@Model.Device.UniqueId</dd>
+
+    <dt class="col-sm-3">Last Heartbeat</dt>
+    <dd class="col-sm-9">@Model.Device.LastHeartbeat</dd>
+</dl>
+
+<a asp-page="Edit" asp-route-id="@Model.Device.Id" class="btn btn-secondary">Edit</a>
+<a asp-page="Index" class="btn btn-link">Back to list</a>
