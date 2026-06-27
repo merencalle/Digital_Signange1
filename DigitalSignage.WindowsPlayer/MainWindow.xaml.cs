@@ -11,10 +11,13 @@ namespace DigitalSignage.WindowsPlayer;
 
 public partial class MainWindow : Window
 {
+    private static readonly Random Jitter = new();
+
     private readonly CmsApiClient _api;
-    private readonly DispatcherTimer _heartbeatTimer = new() { Interval = TimeSpan.FromSeconds(30) };
-    private readonly DispatcherTimer _playlistTimer = new() { Interval = TimeSpan.FromSeconds(30) };
-    private readonly DispatcherTimer _advanceTimer = new() { Interval = TimeSpan.FromSeconds(8) };
+    private readonly MediaCache _mediaCache = new();
+    private readonly DispatcherTimer _heartbeatTimer = new();
+    private readonly DispatcherTimer _playlistTimer = new();
+    private readonly DispatcherTimer _advanceTimer = new();
 
     private List<ContentItem> _items = new();
     private int _currentIndex = -1;
@@ -27,12 +30,28 @@ public partial class MainWindow : Window
         var baseUrl = Environment.GetEnvironmentVariable("CMS_BASE_URL") ?? "http://localhost:5109";
         _api = new CmsApiClient(baseUrl);
 
-        _heartbeatTimer.Tick += async (_, _) => await SendHeartbeatAsync();
-        _playlistTimer.Tick += async (_, _) => await RefreshPlaylistAsync();
-        _advanceTimer.Tick += (_, _) => ShowNext();
+        // Jittered intervals so a fleet of players doesn't hammer the CMS in lockstep.
+        _heartbeatTimer.Interval = JitteredInterval(30);
+        _playlistTimer.Interval = JitteredInterval(30);
+        _advanceTimer.Interval = TimeSpan.FromSeconds(8);
+
+        _heartbeatTimer.Tick += async (_, _) =>
+        {
+            _heartbeatTimer.Interval = JitteredInterval(30);
+            await SendHeartbeatAsync();
+        };
+        _playlistTimer.Tick += async (_, _) =>
+        {
+            _playlistTimer.Interval = JitteredInterval(30);
+            await RefreshPlaylistAsync();
+        };
+        _advanceTimer.Tick += async (_, _) => await ShowNextAsync();
 
         Loaded += MainWindow_Loaded;
     }
+
+    private static TimeSpan JitteredInterval(int baseSeconds) =>
+        TimeSpan.FromSeconds(baseSeconds + Jitter.Next(-5, 6));
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -99,7 +118,7 @@ public partial class MainWindow : Window
             }
             else
             {
-                ShowNext();
+                await ShowNextAsync();
             }
         }
         catch
@@ -108,7 +127,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ShowNext()
+    private async Task ShowNextAsync()
     {
         if (_items.Count == 0)
         {
@@ -118,10 +137,31 @@ public partial class MainWindow : Window
 
         _currentIndex = (_currentIndex + 1) % _items.Count;
         var item = _items[_currentIndex];
-        var uri = new Uri($"{_api.BaseUrl}/{item.FilePath.TrimStart('/')}");
 
         _advanceTimer.Stop();
         VideoDisplay.Stop();
+
+        if (item.ContentType != "Image" && item.ContentType != "Video")
+        {
+            ShowPlaceholder($"Unsupported content type '{item.ContentType}': {item.Name}");
+            _advanceTimer.Start();
+            return;
+        }
+
+        string localPath;
+        try
+        {
+            // Cached items play straight from disk - no network hit on repeat loops.
+            localPath = await _mediaCache.EnsureCachedAsync(item, destPath => _api.DownloadFileAsync(item.FilePath, destPath));
+        }
+        catch
+        {
+            ShowPlaceholder($"Could not download '{item.Name}'.");
+            _advanceTimer.Start();
+            return;
+        }
+
+        var uri = new Uri(localPath);
 
         switch (item.ContentType)
         {
@@ -136,17 +176,12 @@ public partial class MainWindow : Window
                 ShowOnly(VideoDisplay);
                 VideoDisplay.Play();
                 break;
-
-            default:
-                ShowPlaceholder($"Unsupported content type '{item.ContentType}': {item.Name}");
-                _advanceTimer.Start();
-                break;
         }
     }
 
-    private void VideoDisplay_MediaEnded(object sender, RoutedEventArgs e)
+    private async void VideoDisplay_MediaEnded(object sender, RoutedEventArgs e)
     {
-        ShowNext();
+        await ShowNextAsync();
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
