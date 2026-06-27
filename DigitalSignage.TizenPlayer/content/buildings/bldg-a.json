@@ -35,6 +35,12 @@
           "duration": 18
         },
         {
+          "id": "wayfinding-map-1",
+          "type": "image",
+          "src": "media/images/wayfinding-map-bldg-a-floor1.png",
+          "duration": 12
+        },
+        {
           "id": "network-status-1",
           "type": "network-status",
           "title": "Network &amp; IT Status",
