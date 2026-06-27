@@ -13,4 +13,5 @@ public class Device
     public int? PlaylistId { get; set; }
     public string? PairingSecret { get; set; }              // Required for a NOT-yet-registered device to claim this row
     public bool IsPaired { get; set; }                       // True once a player has successfully registered against this row
+    public string? OwnerUserId { get; set; }                 // The "User" role account this is their own player, if any
 }

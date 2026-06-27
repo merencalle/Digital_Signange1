@@ -1,0 +1,281 @@
+/* Sentinel Tizen Player - Mission-Ready Digital Signage, Built for the Army */
+
+:root {
+  --navy-deep: #060f24;
+  --navy: #0d1f3f;
+  --navy-mid: #16294f;
+  --steel: #8a96a6;
+  --steel-light: #c4ccd6;
+  --accent: #c8202f;
+  --accent-dark: #9c1822;
+  --ok-green: #2f9e44;
+  --warn-amber: #d9a400;
+  --danger-red: #c8202f;
+  --font-main: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--navy-deep);
+  color: #fff;
+  font-family: var(--font-main);
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Header ---------- */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+  background: var(--navy);
+  border-bottom: 4px solid var(--accent);
+  flex-shrink: 0;
+}
+
+.header-bar .brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-bar .brand .badge-icon {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.header-bar .brand .title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.header-bar .brand .tagline {
+  font-size: 0.95rem;
+  color: var(--steel-light);
+  letter-spacing: 0.02em;
+}
+
+.header-bar .zone-info {
+  text-align: right;
+  font-size: 1.1rem;
+  color: var(--steel-light);
+}
+
+.header-bar .zone-info .zone-name {
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ---------- Slide area ---------- */
+.slide-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 6rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide .slide-icon {
+  font-size: 4rem;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.slide h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  margin: 0 0 1.5rem;
+  text-transform: uppercase;
+}
+
+.slide .body-text {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: var(--steel-light);
+  max-width: 1400px;
+}
+
+.slide img.slide-media,
+.slide video.slide-media {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+/* Type-specific accents */
+.slide.type-network-status .status-pill {
+  display: inline-block;
+  padding: 0.4rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}
+.slide.type-network-status .status-ok { background: var(--ok-green); }
+.slide.type-network-status .status-degraded { background: var(--warn-amber); color: #1b1b1b; }
+.slide.type-network-status .status-down { background: var(--danger-red); }
+
+.slide.type-training-board h1,
+.slide.type-recognition-board h1 {
+  color: var(--accent);
+}
+
+.slide.type-directory .body-text {
+  font-size: 2.1rem;
+  text-align: left;
+}
+
+/* ---------- Footer ticker ---------- */
+.footer-bar {
+  flex-shrink: 0;
+  background: var(--navy);
+  border-top: 2px solid var(--navy-mid);
+  padding: 0.85rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.footer-bar .clock {
+  padding: 0 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-right: 1px solid var(--navy-mid);
+  white-space: nowrap;
+}
+
+.ticker-wrap {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ticker-scroll 30s linear infinite;
+  font-size: 1.05rem;
+  color: var(--steel-light);
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* ---------- Emergency override ---------- */
+#emergency-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--danger-red);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem;
+  animation: emergency-pulse 1.4s ease-in-out infinite;
+}
+
+#emergency-overlay.show {
+  display: flex;
+}
+
+#emergency-overlay .emergency-level {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #1b1b1b;
+  padding: 0.5rem 2rem;
+  border-radius: 999px;
+  margin-bottom: 2rem;
+}
+
+#emergency-overlay h1 {
+  font-size: 5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0 0 2rem;
+  letter-spacing: 0.02em;
+}
+
+#emergency-overlay .body-text {
+  font-size: 2.2rem;
+  max-width: 1400px;
+  font-weight: 600;
+}
+
+#emergency-overlay .issued-by {
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+@keyframes emergency-pulse {
+  0%, 100% { background: var(--danger-red); }
+  50% { background: #8c0f1a; }
+}
+
+/* ---------- Offline indicator ---------- */
+#offline-indicator {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 900;
+  background: var(--warn-amber);
+  color: #1b1b1b;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  display: none;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#offline-indicator.show {
+  display: block;
+}

@@ -1,0 +1,47 @@
+@page
+@model DigitalSignage.CMS.Pages.Users.CreateModel
+@{
+    ViewData["Title"] = "Add User";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                @if (Model.ErrorMessage is not null)
+                {
+                    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage</div>
+                }
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input asp-for="UserName" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <div class="form-text">At least 8 characters.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select asp-for="Role" asp-items="Model.RoleOptions" class="form-select"></select>
+                        <div class="form-text">
+                            <strong>SuperAdmin</strong>: network deployment + everything.
+                            <strong>Admin</strong>: devices, content, playlists, player deployment.
+                            <strong>Manager</strong>: content design + approval.
+                            <strong>User</strong>: their own player's content only, subject to Manager approval.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Owned Player (only used for the User role)</label>
+                        <select asp-for="OwnedDeviceId" asp-items="Model.UnownedDeviceOptions" class="form-select">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Create</button>
+                    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 using DigitalSignage.Shared.Dtos;
 using DigitalSignage.Shared.Models;
 
@@ -9,10 +10,23 @@ namespace DigitalSignage.WindowsPlayer.Services;
 public class CmsApiClient
 {
     private readonly HttpClient _http;
+    private readonly string? _pairingSecret;
 
-    public CmsApiClient(string baseUrl)
+    public CmsApiClient(string baseUrl, string? pairingSecret = null, string? pinnedCertThumbprint = null)
     {
-        _http = new HttpClient { BaseAddress = new Uri(baseUrl) };
+        _pairingSecret = pairingSecret;
+
+        var handler = new HttpClientHandler();
+        if (!string.IsNullOrWhiteSpace(pinnedCertThumbprint))
+        {
+            // Pinned mode: only accept the exact certificate we were told to expect,
+            // rather than relying on the OS trust store (works even for self-signed certs).
+            handler.ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
+                cert is not null &&
+                string.Equals(cert.GetCertHashString(), pinnedCertThumbprint, StringComparison.OrdinalIgnoreCase);
+        }
+
+        _http = new HttpClient(handler) { BaseAddress = new Uri(baseUrl) };
     }
 
     public string BaseUrl => _http.BaseAddress!.ToString().TrimEnd('/');
@@ -24,7 +38,8 @@ public class CmsApiClient
             UniqueId = uniqueId,
             Name = name,
             DeviceType = deviceType,
-            IpAddress = ipAddress
+            IpAddress = ipAddress,
+            PairingSecret = _pairingSecret
         };
 
         var response = await _http.PostAsJsonAsync("/api/devices/register", request);

@@ -46,9 +46,18 @@ public class EditModel : PageModel
             return Page();
         }
 
-        Playlist.ContentIds = SelectedContentIds;
+        var existing = await _context.Playlists.FindAsync(Playlist.Id);
+        if (existing is null)
+        {
+            return NotFound();
+        }
 
-        _context.Attach(Playlist).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        // Edited directly by Admin/Manager - that IS the approval, so it stays/becomes Approved.
+        // Leaves Submitted*/Approved*/RejectionReason audit fields untouched.
+        existing.Name = Playlist.Name;
+        existing.ContentIds = SelectedContentIds;
+        existing.Status = PlaylistStatus.Approved;
+
         await _context.SaveChangesAsync();
 
         return RedirectToPage("Index");

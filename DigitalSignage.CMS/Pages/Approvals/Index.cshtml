@@ -1,0 +1,48 @@
+@page
+@model DigitalSignage.CMS.Pages.Approvals.IndexModel
+@{
+    ViewData["Title"] = "Approvals";
+}
+
+<p class="text-muted">Playlists submitted by User accounts, waiting for review before they go live on a player.</p>
+
+@if (Model.Pending.Count == 0)
+{
+    <div class="card">
+        <div class="card-body text-muted">Nothing pending approval.</div>
+    </div>
+}
+else
+{
+    @foreach (var row in Model.Pending)
+    {
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>@row.Playlist.Name</span>
+                <span class="text-muted small">Submitted by @row.SubmittedByName on @row.Playlist.SubmittedAt?.ToString("yyyy-MM-dd HH:mm")</span>
+            </div>
+            <div class="card-body">
+                <h6 class="small text-muted">Content Items</h6>
+                <ul class="list-group mb-3">
+                    @foreach (var item in row.Items)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            @item.Name
+                            <partial name="_ContentTypeBadge" model="@item.ContentType" />
+                        </li>
+                    }
+                </ul>
+
+                <div class="d-flex gap-2">
+                    <form method="post" asp-page-handler="Approve" asp-route-id="@row.Playlist.Id">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Approve</button>
+                    </form>
+                    <form method="post" asp-page-handler="Reject" asp-route-id="@row.Playlist.Id" class="d-flex gap-2">
+                        <input type="text" name="reason" class="form-control" placeholder="Reason for rejection" />
+                        <button type="submit" class="btn btn-outline-danger text-nowrap"><i class="bi bi-x-lg"></i> Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}

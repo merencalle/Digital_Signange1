@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Sentinel Signage Player</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div id="app">
+        <header class="header-bar">
+            <div class="brand">
+                <div class="badge-icon">S</div>
+                <div>
+                    <div class="title">Sentinel</div>
+                    <div class="tagline">Mission-Ready Digital Signage &mdash; Built for the Army</div>
+                </div>
+            </div>
+            <div class="zone-info">
+                <div class="zone-name" id="zone-name-label">Loading...</div>
+                <div id="building-name-label"></div>
+            </div>
+        </header>
+
+        <main class="slide-area" id="slide-area">
+            <!-- Slides are injected here by player.js -->
+        </main>
+
+        <footer class="footer-bar">
+            <div class="clock" id="clock"></div>
+            <div class="ticker-wrap">
+                <div class="ticker-content" id="ticker-content">Sentinel Signage &mdash; Mission-Ready Digital Signage, Built for the Army</div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="offline-indicator">Offline &mdash; showing last cached content</div>
+
+    <div id="emergency-overlay">
+        <div class="emergency-level" id="emergency-level"></div>
+        <h1 id="emergency-title"></h1>
+        <div class="body-text" id="emergency-message"></div>
+        <div class="issued-by" id="emergency-issued-by"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/tizen-integration.js"></script>
+    <script src="js/content-loader.js"></script>
+    <script src="js/player.js"></script>
+</body>
+</html>

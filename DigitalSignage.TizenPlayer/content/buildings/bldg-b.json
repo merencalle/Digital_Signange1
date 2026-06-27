@@ -1,0 +1,74 @@
+{
+  "buildingId": "bldg-b",
+  "buildingName": "Building B — Logistics & Sustainment",
+  "command": "Division Sustainment Brigade",
+  "installation": "Fort Example",
+  "zones": [
+    {
+      "zoneId": "bldg-b-floor1-lobby",
+      "zoneName": "Main Lobby",
+      "zoneType": "lobby",
+      "floor": 1,
+      "rotationDefaultDuration": 15,
+      "playlist": [
+        {
+          "id": "b-welcome-1",
+          "type": "message",
+          "title": "Welcome to Building B",
+          "body": "Division Sustainment Brigade — Fort Example",
+          "icon": "shield",
+          "duration": 12
+        },
+        {
+          "id": "b-visitor-1",
+          "type": "message",
+          "title": "Visitor Check-In",
+          "body": "All visitors must check in at the front desk and display a visitor badge at all times.",
+          "icon": "person-badge",
+          "duration": 14
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-b-floor1-elevator",
+      "zoneName": "Elevator Bank",
+      "zoneType": "elevator",
+      "floor": 1,
+      "rotationDefaultDuration": 10,
+      "playlist": [
+        {
+          "id": "b-elev1-directory",
+          "type": "directory",
+          "title": "Floor Directory",
+          "body": "1: Lobby &amp; Supply &nbsp;|&nbsp; 2: Transportation &nbsp;|&nbsp; 3: Maintenance Management",
+          "duration": 12
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-b-floor2-hallway",
+      "zoneName": "Floor 2 Hallway",
+      "zoneType": "hallway",
+      "floor": 2,
+      "rotationDefaultDuration": 14,
+      "playlist": [
+        {
+          "id": "b-hall2-network",
+          "type": "network-status",
+          "title": "Network &amp; IT Status",
+          "body": "Degraded performance reported on the supply tracking system. IT is investigating.",
+          "status": "degraded",
+          "duration": 14
+        },
+        {
+          "id": "b-hall2-safety",
+          "type": "message",
+          "title": "Safety Reminder",
+          "body": "PPE is mandatory in all maintenance bays. No exceptions.",
+          "icon": "exclamation-triangle",
+          "duration": 12
+        }
+      ]
+    }
+  ]
+}

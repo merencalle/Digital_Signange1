@@ -1,0 +1,12 @@
+@model string
+@{
+    var badgeClass = Model switch
+    {
+        "SuperAdmin" => "text-bg-danger",
+        "Admin" => "text-bg-primary",
+        "Manager" => "text-bg-warning",
+        "User" => "text-bg-secondary",
+        _ => "text-bg-light border"
+    };
+}
+<span class="badge rounded-pill @badgeClass">@Model</span>

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
 using DigitalSignage.Shared.Dtos;
 using DigitalSignage.Shared.Models;
+using static DigitalSignage.Shared.Models.PlaylistStatus;
 
 namespace DigitalSignage.CMS.Endpoints;
 
@@ -100,8 +101,9 @@ public static class DeviceEndpoints
             }
 
             var playlist = await db.Playlists.FindAsync(device.PlaylistId.Value);
-            if (playlist is null)
+            if (playlist is null || playlist.Status != Approved)
             {
+                // Draft/PendingApproval/Rejected playlists never reach a live player.
                 return Results.NoContent();
             }
 

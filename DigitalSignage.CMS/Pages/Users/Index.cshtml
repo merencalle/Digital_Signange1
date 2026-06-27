@@ -1,0 +1,44 @@
+@page
+@model DigitalSignage.CMS.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="d-flex justify-content-end mb-3">
+    <a asp-page="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add User</a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+@if (Model.Users.Count == 0)
+{
+        <p class="text-muted p-3 mb-0">No users yet.</p>
+}
+else
+{
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Owned Player</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+@foreach (var user in Model.Users)
+{
+                <tr>
+                    <td>@user.UserName</td>
+                    <td><partial name="_RoleBadge" model="@user.Role" /></td>
+                    <td>@(user.OwnedDeviceName ?? "—")</td>
+                    <td class="text-end">
+                        <a asp-page="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+                    </td>
+                </tr>
+}
+            </tbody>
+        </table>
+}
+    </div>
+</div>

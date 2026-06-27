@@ -1,0 +1,12 @@
+{
+  "active": true,
+  "level": "FPCON-CHARLIE",
+  "title": "LOCKDOWN IN EFFECT",
+  "message": "Shelter in place. Lock and barricade doors. Await further instructions from installation security.",
+  "issuedBy": "Installation Network Department",
+  "issuedAt": "2026-06-27T12:00:00Z",
+  "expiresAt": null,
+  "evacuationMaps": {
+    "1": "content/media/images/evac-bldg-a-floor1.svg"
+  }
+}

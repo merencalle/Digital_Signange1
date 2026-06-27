@@ -1,0 +1,42 @@
+@page "{id}"
+@model DigitalSignage.CMS.Pages.Users.EditModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-3">@Model.UserName</h6>
+                @if (Model.Message is not null)
+                {
+                    <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @Model.Message</div>
+                }
+                @if (Model.ErrorMessage is not null)
+                {
+                    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage</div>
+                }
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select asp-for="Role" asp-items="Model.RoleOptions" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Owned Player (only used for the User role)</label>
+                        <select asp-for="OwnedDeviceId" asp-items="Model.DeviceOptions" class="form-select">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Reset Password</label>
+                        <input asp-for="NewPassword" type="password" class="form-control" placeholder="Leave blank to keep current password" />
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+                    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

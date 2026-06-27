@@ -1,0 +1,95 @@
+@page
+@model DigitalSignage.CMS.Pages.Wizard.EnrollmentModel
+@{
+    ViewData["Title"] = "Deployment Wizard - Enroll a Player";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <span class="badge rounded-pill text-bg-light border me-2">@Model.Scenario</span>
+        <span class="badge rounded-pill @(Model.Variant == "secure" ? "text-bg-primary" : "text-bg-secondary")">@(Model.Variant == "secure" ? "Secure" : "Standard")</span>
+    </div>
+    <a asp-page="Certificate" asp-route-Scenario="@Model.Scenario" asp-route-Variant="@Model.Variant" class="btn btn-sm btn-outline-secondary">Back to certificate</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card mb-3">
+            <div class="card-header">Create a Pending Player Slot</div>
+            <div class="card-body">
+                <p class="text-muted small">Pre-create a Device row with a one-time pairing secret. The Player claims it on first run &mdash; no manually-typed UniqueId, no open registration for unknown devices.</p>
+                <form method="post" asp-page-handler="CreatePending">
+                    <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                    <div class="mb-2">
+                        <label class="form-label">Name</label>
+                        <input asp-for="NewDeviceName" class="form-control" placeholder="Lobby Display" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input asp-for="NewDeviceLocation" class="form-control" placeholder="Building 4, Lobby" />
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Pending (Not Yet Paired)</div>
+            <div class="card-body p-0">
+                @if (Model.PendingDevices.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No pending devices yet.</p>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var device in Model.PendingDevices)
+                        {
+                            <a asp-page="Enrollment" asp-route-Scenario="@Model.Scenario" asp-route-Variant="@Model.Variant" asp-route-DeviceId="@device.Id"
+                               class="list-group-item list-group-item-action @(Model.SelectedDevice?.Id == device.Id ? "active" : "")">
+                                @device.Name <span class="text-muted small">@device.Location</span>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        @if (Model.SelectedDevice is null)
+        {
+            <div class="card">
+                <div class="card-body text-muted">Select or create a pending device to generate its enrollment package.</div>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">Enrollment Package &mdash; @Model.SelectedDevice.Name</div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">CMS URL</dt>
+                        <dd class="col-sm-8"><code>@Model.CmsBaseUrl</code></dd>
+                        <dt class="col-sm-4">Pairing Secret</dt>
+                        <dd class="col-sm-8"><code>@Model.SelectedDevice.PairingSecret</code></dd>
+                        @if (Model.Variant == "secure")
+                        {
+                            <dt class="col-sm-4">Pinned Cert Thumbprint</dt>
+                            <dd class="col-sm-8"><code>included automatically from the active certificate</code></dd>
+                        }
+                    </dl>
+
+                    <p class="text-muted small">Download this file and place it next to <code>DigitalSignage.WindowsPlayer.exe</code> as <code>enrollment.json</code> on the target machine, then launch the Player. It claims this device row on first run and the secret is consumed immediately afterward.</p>
+
+                    <a asp-page-handler="DownloadPackage" asp-route-id="@Model.SelectedDevice.Id" class="btn btn-primary"><i class="bi bi-download"></i> Download enrollment.json</a>
+
+                    <form method="post" asp-page-handler="RegenerateSecret" asp-route-id="@Model.SelectedDevice.Id" class="d-inline ms-2" onsubmit="return confirm('This invalidates the current package. Continue?');">
+                        <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-arrow-repeat"></i> Regenerate Secret</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>

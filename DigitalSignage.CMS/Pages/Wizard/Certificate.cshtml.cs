@@ -144,7 +144,7 @@ public class CertificateModel : PageModel
 
     public IActionResult OnGetDownloadCer()
     {
-        if (!File.Exists(_certService.CerPath))
+        if (!System.IO.File.Exists(_certService.CerPath))
         {
             return NotFound();
         }

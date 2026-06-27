@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:tizen="http://tizen.org/ns/widgets"
+        id="http://sentinel.army.mil/tizenplayer"
+        version="1.0.0"
+        viewmodes="maximized">
+    <tizen:application id="SentinelTizenPlayer.SentinelTizenPlayer"
+                        package="SentinelTizenPlayer"
+                        required_version="6.0"/>
+
+    <name>Sentinel Signage Player</name>
+    <icon src="assets/icons/icon.png"/>
+    <content src="index.html"/>
+
+    <!-- Mission-Ready Digital Signage - Built for the Army -->
+    <tizen:profile name="tv-samsung"/>
+
+    <tizen:setting screen-orientation="landscape"
+                   context-menu="disable"
+                   background-support="enable"
+                   encryption="disable"
+                   install-location="auto"
+                   hwkey-event="enable"/>
+
+    <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
+
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/network.get"/>
+    <tizen:privilege name="http://tizen.org/privilege/power"/>
+    <tizen:privilege name="http://tizen.org/privilege/systemmanager"/>
+
+    <access origin="*" subdomains="true"/>
+</widget>

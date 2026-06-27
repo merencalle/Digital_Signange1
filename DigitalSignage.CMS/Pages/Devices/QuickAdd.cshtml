@@ -1,0 +1,36 @@
+@page
+@model DigitalSignage.CMS.Pages.Devices.QuickAddModel
+@{
+    ViewData["Title"] = "Add a Player";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        @if (!Model.PlayerBuildAvailable)
+        {
+            <div class="alert alert-warning"><i class="bi bi-exclamation-triangle-fill"></i> The Player hasn't been built yet on this machine, so the download won't be available until it is.</div>
+        }
+        @if (Model.ErrorMessage is not null)
+        {
+            <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage</div>
+        }
+        <div class="card">
+            <div class="card-body">
+                <p class="text-muted small">Fill this in, click the button once, and you'll get a ready-to-run package: the Player app plus everything it needs to register itself. Unzip it on the target PC, run <code>DigitalSignage.WindowsPlayer.exe</code>, and it's online.</p>
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Player Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Lobby Display" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input asp-for="Location" class="form-control" placeholder="Building 4, Lobby" />
+                        <div class="form-text">Used so you (and the player it joins to) know where the content actually gets played.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-download"></i> Download &amp; Register Player</button>
+                    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

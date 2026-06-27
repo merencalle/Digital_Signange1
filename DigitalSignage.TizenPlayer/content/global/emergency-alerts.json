@@ -1,0 +1,10 @@
+{
+  "active": false,
+  "level": "INFORMATION",
+  "title": "",
+  "message": "",
+  "issuedBy": "",
+  "issuedAt": null,
+  "expiresAt": null,
+  "evacuationMaps": {}
+}

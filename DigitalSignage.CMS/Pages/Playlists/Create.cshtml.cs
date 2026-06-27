@@ -38,6 +38,7 @@ public class CreateModel : PageModel
         }
 
         Playlist.ContentIds = SelectedContentIds;
+        Playlist.Status = PlaylistStatus.Approved; // created directly by Admin/Manager - no separate approval needed
 
         _context.Playlists.Add(Playlist);
         await _context.SaveChangesAsync();

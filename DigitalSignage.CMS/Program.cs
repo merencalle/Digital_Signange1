@@ -13,10 +13,28 @@ const long MaxUploadBytes = 1024L * 1024 * 1024; // 1 GiB
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Roles.SuperAdminPolicy, p => p.RequireRole(Roles.SuperAdmin));
+    options.AddPolicy(Roles.OperatorsPolicy, p => p.RequireRole(Roles.SuperAdmin, Roles.Admin));
+    options.AddPolicy(Roles.ContentTeamPolicy, p => p.RequireRole(Roles.SuperAdmin, Roles.Admin, Roles.Manager));
+    options.AddPolicy(Roles.ManagerPolicy, p => p.RequireRole(Roles.SuperAdmin, Roles.Manager));
+});
+
 builder.Services.AddRazorPages(options =>
 {
+    // Default: any authenticated user (role-specific tightening happens per folder below).
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToPage("/Account/Login");
+
+    options.Conventions.AuthorizeFolder("/Devices", Roles.OperatorsPolicy);
+    options.Conventions.AuthorizeFolder("/Logs", Roles.OperatorsPolicy);
+    options.Conventions.AuthorizeFolder("/Users", Roles.SuperAdminPolicy);
+    options.Conventions.AuthorizePage("/Wizard/Index", Roles.SuperAdminPolicy);
+    options.Conventions.AuthorizePage("/Wizard/Certificate", Roles.SuperAdminPolicy);
+    options.Conventions.AuthorizePage("/Wizard/Enrollment", Roles.OperatorsPolicy);
+    options.Conventions.AuthorizeFolder("/Playlists", Roles.ContentTeamPolicy);
+    options.Conventions.AuthorizeFolder("/Approvals", Roles.ManagerPolicy);
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -39,6 +57,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<MediaConversionService>();
 builder.Services.AddSingleton<CertificateService>();
+builder.Services.AddSingleton<PlayerPackager>();
 
 builder.Services.AddSingleton<LogEntryQueue>();
 builder.Services.AddSingleton<Microsoft.Extensions.Logging.ILoggerProvider, DatabaseLoggerProvider>();

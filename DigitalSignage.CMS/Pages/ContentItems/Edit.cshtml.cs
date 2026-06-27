@@ -36,7 +36,18 @@ public class EditModel : PageModel
             return Page();
         }
 
-        _context.Attach(ContentItem).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        var existing = await _context.ContentItems.FindAsync(ContentItem.Id);
+        if (existing is null)
+        {
+            return NotFound();
+        }
+
+        // Only the fields this form edits - leaves FileHash untouched so the player cache stays valid.
+        existing.Name = ContentItem.Name;
+        existing.ContentType = ContentItem.ContentType;
+        existing.FilePath = ContentItem.FilePath;
+        existing.FileSize = ContentItem.FileSize;
+
         await _context.SaveChangesAsync();
 
         return RedirectToPage("Index");

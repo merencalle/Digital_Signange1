@@ -42,7 +42,21 @@ public class EditModel : PageModel
             return Page();
         }
 
-        _context.Attach(Device).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        var existing = await _context.Devices.FindAsync(Device.Id);
+        if (existing is null)
+        {
+            return NotFound();
+        }
+
+        // Only update the fields this form actually edits - leaves IsPaired/PairingSecret/OwnerUserId untouched.
+        existing.Name = Device.Name;
+        existing.DeviceType = Device.DeviceType;
+        existing.Location = Device.Location;
+        existing.Status = Device.Status;
+        existing.IpAddress = Device.IpAddress;
+        existing.UniqueId = Device.UniqueId;
+        existing.PlaylistId = Device.PlaylistId;
+
         await _context.SaveChangesAsync();
 
         return RedirectToPage("Index");

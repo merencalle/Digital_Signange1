@@ -12,7 +12,16 @@ public static class AdminSeeder
     {
         using var scope = services.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<object>>();
+
+        foreach (var role in Roles.All)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
 
         if (userManager.Users.Any())
         {
@@ -28,8 +37,10 @@ public static class AdminSeeder
         var result = await userManager.CreateAsync(admin, DefaultPassword);
         if (result.Succeeded)
         {
+            await userManager.AddToRoleAsync(admin, Roles.SuperAdmin);
+
             logger.LogWarning(
-                "No admin account existed, so one was created automatically. Username: '{Username}', Password: '{Password}'. Change this password after logging in.",
+                "No admin account existed, so a SuperAdmin account was created automatically. Username: '{Username}', Password: '{Password}'. Change this password after logging in.",
                 DefaultUserName, DefaultPassword);
         }
         else

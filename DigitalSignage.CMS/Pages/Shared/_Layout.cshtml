@@ -21,26 +21,64 @@
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Devices") ? "active" : "")" asp-area="" asp-page="/Devices/Index">
-                        <i class="bi bi-hdd-network"></i> Devices
-                    </a>
-                </li>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Devices") ? "active" : "")" asp-area="" asp-page="/Devices/Index">
+                            <i class="bi bi-hdd-network"></i> Devices
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("User"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/MyPlayer") ? "active" : "")" asp-area="" asp-page="/MyPlayer/Index">
+                            <i class="bi bi-display"></i> My Player
+                        </a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a class="nav-link @(Context.Request.Path.StartsWithSegments("/ContentItems") ? "active" : "")" asp-area="" asp-page="/ContentItems/Index">
                         <i class="bi bi-images"></i> Content
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Playlists") ? "active" : "")" asp-area="" asp-page="/Playlists/Index">
-                        <i class="bi bi-collection-play"></i> Playlists
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Logs") ? "active" : "")" asp-area="" asp-page="/Logs/Index">
-                        <i class="bi bi-journal-text"></i> Logs
-                    </a>
-                </li>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Playlists") ? "active" : "")" asp-area="" asp-page="/Playlists/Index">
+                            <i class="bi bi-collection-play"></i> Playlists
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Manager"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Approvals") ? "active" : "")" asp-area="" asp-page="/Approvals/Index">
+                            <i class="bi bi-clipboard-check"></i> Approvals
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Logs") ? "active" : "")" asp-area="" asp-page="/Logs/Index">
+                            <i class="bi bi-journal-text"></i> Logs
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("SuperAdmin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Wizard") ? "active" : "")" asp-area="" asp-page="/Wizard/Index">
+                            <i class="bi bi-magic"></i> Deployment Wizard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Users") ? "active" : "")" asp-area="" asp-page="/Users/Index">
+                            <i class="bi bi-people"></i> Users
+                        </a>
+                    </li>
+                }
             </ul>
         </nav>
         <div class="main-area">

@@ -27,8 +27,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var baseUrl = Environment.GetEnvironmentVariable("CMS_BASE_URL") ?? "https://localhost:5110";
-        _api = new CmsApiClient(baseUrl);
+        var enrollment = EnrollmentLoader.TryLoad();
+        var baseUrl = enrollment?.CmsBaseUrl ?? Environment.GetEnvironmentVariable("CMS_BASE_URL") ?? "https://localhost:5110";
+        _api = new CmsApiClient(baseUrl, enrollment?.PairingSecret, enrollment?.PinnedCertThumbprint);
 
         // Jittered intervals so a fleet of players doesn't hammer the CMS in lockstep.
         _heartbeatTimer.Interval = JitteredInterval(30);
@@ -59,7 +60,18 @@ public partial class MainWindow : Window
         PlaceholderText.Visibility = Visibility.Visible;
 
         var uniqueId = DeviceIdentity.GetOrCreateUniqueId();
-        var device = await _api.RegisterAsync(uniqueId, Environment.MachineName, "WindowsPlayer", GetLocalIpAddress());
+
+        Device? device;
+        try
+        {
+            device = await _api.RegisterAsync(uniqueId, Environment.MachineName, "WindowsPlayer", GetLocalIpAddress());
+        }
+        catch (Exception ex)
+        {
+            PlaceholderText.Text = $"Could not register with CMS: {ex.Message}";
+            return;
+        }
+
         _deviceId = device?.Id;
 
         if (_deviceId is null)
@@ -67,6 +79,9 @@ public partial class MainWindow : Window
             PlaceholderText.Text = "Could not register with CMS.";
             return;
         }
+
+        EnrollmentLoader.MarkConsumed();
+        PlaceholderText.Text = "Registered. Loading playlist...";
 
         _heartbeatTimer.Start();
         _playlistTimer.Start();
@@ -121,9 +136,14 @@ public partial class MainWindow : Window
                 await ShowNextAsync();
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Network hiccup; the next playlist tick will retry.
+            if (_items.Count == 0)
+            {
+                // Nothing on screen yet - worth surfacing instead of leaving stale "Registering..." text.
+                ShowPlaceholder($"Could not load playlist: {ex.Message}");
+            }
+            // Otherwise something is already playing; a transient blip shouldn't interrupt it. Next tick retries.
         }
     }
 

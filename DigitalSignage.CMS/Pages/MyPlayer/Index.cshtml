@@ -1,0 +1,67 @@
+@page
+@model DigitalSignage.CMS.Pages.MyPlayer.IndexModel
+@{
+    ViewData["Title"] = "My Player";
+}
+
+@if (Model.MyDevice is null)
+{
+    <div class="card">
+        <div class="card-body text-muted">No player is assigned to your account yet. Ask an administrator to assign one.</div>
+    </div>
+}
+else
+{
+    <div class="card mb-3">
+        <div class="card-header">@Model.MyDevice.Name</div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Location</dt>
+                <dd class="col-sm-9">@Model.MyDevice.Location</dd>
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9"><partial name="_StatusBadge" model="@Model.MyDevice.Status" /></dd>
+                <dt class="col-sm-3">Last Heartbeat</dt>
+                <dd class="col-sm-9">@Model.MyDevice.LastHeartbeat</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>My Content</span>
+            <a asp-page="EditPlaylist" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Edit My Content</a>
+        </div>
+        <div class="card-body">
+            @if (Model.MyPlaylist is null)
+            {
+                <p class="text-muted mb-0">You haven't built a playlist yet.</p>
+            }
+            else
+            {
+                <p>
+                    <strong>@Model.MyPlaylist.Name</strong>
+                    @switch (Model.MyPlaylist.Status)
+                    {
+                        case "Draft":
+                            <span class="badge rounded-pill text-bg-secondary">Draft</span>
+                            break;
+                        case "PendingApproval":
+                            <span class="badge rounded-pill text-bg-warning">Pending Approval</span>
+                            break;
+                        case "Approved":
+                            <span class="badge rounded-pill text-bg-success">Live</span>
+                            break;
+                        case "Rejected":
+                            <span class="badge rounded-pill text-bg-danger">Rejected</span>
+                            break;
+                    }
+                </p>
+                <p class="text-muted small mb-0">@Model.MyPlaylist.ContentIds.Count content item(s)</p>
+                @if (Model.MyPlaylist.Status == "Rejected" && Model.MyPlaylist.RejectionReason is not null)
+                {
+                    <div class="alert alert-danger mt-2 mb-0"><i class="bi bi-exclamation-triangle-fill"></i> @Model.MyPlaylist.RejectionReason</div>
+                }
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,8 @@
+{
+  "deviceName": "BldgA-Floor1-Lobby-TV1",
+  "buildingId": "bldg-a",
+  "zoneId": "bldg-a-floor1-lobby",
+  "mode": "standalone",
+  "cmsBaseUrl": null,
+  "contentBasePath": "content"
+}

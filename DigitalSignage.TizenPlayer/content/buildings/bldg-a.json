@@ -1,0 +1,151 @@
+{
+  "buildingId": "bldg-a",
+  "buildingName": "Building A — Headquarters",
+  "command": "1st Infantry Division HQ",
+  "installation": "Fort Example",
+  "zones": [
+    {
+      "zoneId": "bldg-a-floor1-lobby",
+      "zoneName": "Main Lobby",
+      "zoneType": "lobby",
+      "floor": 1,
+      "rotationDefaultDuration": 15,
+      "playlist": [
+        {
+          "id": "welcome-1",
+          "type": "message",
+          "title": "Welcome to Building A",
+          "body": "Headquarters, 1st Infantry Division — Fort Example",
+          "icon": "shield",
+          "duration": 12
+        },
+        {
+          "id": "commander-note-1",
+          "type": "message",
+          "title": "Commander's Note",
+          "body": "“Readiness is a daily choice. Thank you for the work you do every day to keep this command mission-ready.” — COL J. Sample, Commanding",
+          "icon": "star",
+          "duration": 15
+        },
+        {
+          "id": "wayfinding-1",
+          "type": "directory",
+          "title": "Building Directory",
+          "body": "Floor 1: Reception, S1 Admin, Visitor Center<br>Floor 2: S2/S3 Operations<br>Floor 3: Command Group, Conference Center<br>Floor 4: S4 Logistics, IT Support",
+          "duration": 18
+        },
+        {
+          "id": "network-status-1",
+          "type": "network-status",
+          "title": "Network &amp; IT Status",
+          "body": "All systems operational. Scheduled maintenance window: Sunday 0200-0400.",
+          "status": "ok",
+          "duration": 12
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-a-floor1-elevator",
+      "zoneName": "Elevator Bank",
+      "zoneType": "elevator",
+      "floor": 1,
+      "rotationDefaultDuration": 10,
+      "playlist": [
+        {
+          "id": "elev1-directory",
+          "type": "directory",
+          "title": "Floor Directory",
+          "body": "1: Lobby &amp; Reception &nbsp;|&nbsp; 2: S2/S3 Operations &nbsp;|&nbsp; 3: Command Group &nbsp;|&nbsp; 4: S4 Logistics",
+          "duration": 12
+        },
+        {
+          "id": "elev1-safety",
+          "type": "message",
+          "title": "Safety Reminder",
+          "body": "In case of fire, use stairwells. Do not use elevators during an emergency evacuation.",
+          "icon": "exclamation-triangle",
+          "duration": 10
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-a-floor2-hallway",
+      "zoneName": "Floor 2 Hallway",
+      "zoneType": "hallway",
+      "floor": 2,
+      "rotationDefaultDuration": 14,
+      "playlist": [
+        {
+          "id": "hall2-training",
+          "type": "training-board",
+          "title": "This Week's Training",
+          "body": "Mon: PT 0600 &mdash; Tue: Weapons Qualification &mdash; Wed: CBRN Refresher &mdash; Thu: Convoy Live Fire &mdash; Fri: Sergeant's Time Training",
+          "duration": 16
+        },
+        {
+          "id": "hall2-weather",
+          "type": "weather",
+          "title": "Local Weather",
+          "body": "72°F, Clear. Tomorrow: 75°F, Partly Cloudy.",
+          "duration": 10
+        },
+        {
+          "id": "hall2-recognition",
+          "type": "recognition-board",
+          "title": "Soldier of the Month",
+          "body": "SGT M. Rivera, S3 Operations &mdash; for exceptional performance during JRTC rotation 26-08.",
+          "duration": 14
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-a-floor3-command",
+      "zoneName": "Command Group Suite",
+      "zoneType": "command",
+      "floor": 3,
+      "rotationDefaultDuration": 16,
+      "playlist": [
+        {
+          "id": "cmd1-mission",
+          "type": "message",
+          "title": "Mission Update",
+          "body": "Division CPX planning continues through next week. POC: S3 Operations.",
+          "icon": "flag",
+          "duration": 16
+        },
+        {
+          "id": "cmd1-opsec",
+          "type": "message",
+          "title": "OPSEC Reminder",
+          "body": "Loose talk costs lives. Verify recipients before discussing movement schedules.",
+          "icon": "lock",
+          "duration": 14
+        }
+      ]
+    },
+    {
+      "zoneId": "bldg-a-floor1-breakroom",
+      "zoneName": "Break Room",
+      "zoneType": "breakroom",
+      "floor": 1,
+      "rotationDefaultDuration": 14,
+      "playlist": [
+        {
+          "id": "break1-menu",
+          "type": "menu",
+          "title": "DFAC Menu — Today",
+          "body": "Lunch: Grilled chicken, rice, steamed vegetables, side salad bar. Dinner: Pasta bar, garlic bread.",
+          "duration": 16
+        },
+        {
+          "id": "break1-morale",
+          "type": "message",
+          "title": "Unit Morale Event",
+          "body": "Family Day BBQ this Saturday, 1100-1500 at the Community Park. All hands welcome.",
+          "icon": "people",
+          "duration": 14
+        }
+      ]
+    }
+  ]
+}
