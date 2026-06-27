@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Sentinel Tizen Player — Content Admin (Standalone)</title>
+<style>
+  :root {
+    --navy-deep: #060f24;
+    --navy: #0d1f3f;
+    --accent: #c8202f;
+    --steel-light: #c4ccd6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #eef0f3;
+    color: #0d1f3f;
+  }
+  header {
+    background: var(--navy-deep);
+    color: #fff;
+    padding: 1.25rem 2rem;
+    border-bottom: 4px solid var(--accent);
+  }
+  header h1 { margin: 0; font-size: 1.4rem; }
+  header p { margin: 0.25rem 0 0; color: var(--steel-light); font-size: 0.9rem; }
+  main { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
+  .banner {
+    background: #fff3cd;
+    border: 1px solid #d9a400;
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+  .card {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(6,15,36,0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card h2 { margin-top: 0; font-size: 1.1rem; }
+  textarea {
+    width: 100%;
+    min-height: 280px;
+    font-family: Consolas, monospace;
+    font-size: 0.85rem;
+    padding: 0.75rem;
+    border: 1px solid #ccd2da;
+    border-radius: 0.35rem;
+  }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 0.35rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  button.secondary { background: #5b6b7c; }
+  button:hover { opacity: 0.9; }
+  input[type="file"], input[type="text"], select { margin-bottom: 0.75rem; }
+  .row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .row > div { flex: 1; min-width: 200px; }
+  label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .status { font-size: 0.85rem; margin-top: 0.5rem; }
+  .status.ok { color: #2f9e44; }
+  .status.error { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+    <h1>Sentinel &mdash; Content Admin (Standalone Mode)</h1>
+    <p>Mission-Ready Digital Signage &mdash; Built for the Army</p>
+</header>
+
+<main>
+    <div class="banner">
+        <strong>This is a lightweight, file-based editor</strong> for the standalone Tizen player's local JSON content.
+        It has no backend, no login, and no audit trail &mdash; it just edits files on your machine. For multi-user,
+        role-based, approval-gated content management, use the full <strong>Sentinel CMS</strong> web application instead.
+    </div>
+
+    <div class="card">
+        <h2>Building / Zone Content</h2>
+        <p>Load a building JSON file (e.g. <code>content/buildings/bldg-a.json</code>), edit it, and download the
+           updated file back into place.</p>
+        <input type="file" id="building-file-input" accept="application/json" />
+        <textarea id="building-json" placeholder="Load a building JSON file above, or paste JSON here directly."></textarea>
+        <div>
+            <button id="validate-building">Validate JSON</button>
+            <button id="download-building" class="secondary">Download Updated File</button>
+        </div>
+        <div id="building-status" class="status"></div>
+    </div>
+
+    <div class="card">
+        <h2>Emergency Alert (Global Override)</h2>
+        <p>Fills in <code>content/global/emergency-alerts.json</code>. Every screen on every building polls this file
+           every few seconds &mdash; setting it active overrides <em>all</em> screens immediately.</p>
+        <div class="row">
+            <div>
+                <label>Status</label>
+                <select id="emergency-active">
+                    <option value="false">Inactive (clear alert)</option>
+                    <option value="true">Active (push to all screens)</option>
+                </select>
+            </div>
+            <div>
+                <label>Level</label>
+                <select id="emergency-level">
+                    <option>INFORMATION</option>
+                    <option>CAUTION</option>
+                    <option>WARNING</option>
+                    <option>FPCON-CHARLIE</option>
+                    <option>LOCKDOWN</option>
+                    <option>EVACUATE</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <label>Title</label>
+                <input type="text" id="emergency-title" placeholder="LOCKDOWN IN EFFECT" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <label>Message</label>
+                <input type="text" id="emergency-message" placeholder="Shelter in place. Await further instructions." style="width:100%;" />
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <label>Issued By</label>
+                <input type="text" id="emergency-issued-by" placeholder="Installation Network Department" style="width:100%;" />
+            </div>
+        </div>
+        <button id="download-emergency">Download emergency-alerts.json</button>
+        <div id="emergency-status" class="status"></div>
+    </div>
+</main>
+
+<script>
+    const buildingInput = document.getElementById("building-file-input");
+    const buildingJson = document.getElementById("building-json");
+    const buildingStatus = document.getElementById("building-status");
+    let loadedFileName = "building.json";
+
+    buildingInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        loadedFileName = file.name;
+        buildingJson.value = await file.text();
+        buildingStatus.textContent = `Loaded ${file.name}`;
+        buildingStatus.className = "status ok";
+    });
+
+    document.getElementById("validate-building").addEventListener("click", () => {
+        try {
+            JSON.parse(buildingJson.value);
+            buildingStatus.textContent = "Valid JSON.";
+            buildingStatus.className = "status ok";
+        } catch (err) {
+            buildingStatus.textContent = "Invalid JSON: " + err.message;
+            buildingStatus.className = "status error";
+        }
+    });
+
+    document.getElementById("download-building").addEventListener("click", () => {
+        try {
+            const parsed = JSON.parse(buildingJson.value);
+            downloadJson(loadedFileName, parsed);
+            buildingStatus.textContent = `Downloaded ${loadedFileName}. Place it in content/buildings/ to publish.`;
+            buildingStatus.className = "status ok";
+        } catch (err) {
+            buildingStatus.textContent = "Cannot download - invalid JSON: " + err.message;
+            buildingStatus.className = "status error";
+        }
+    });
+
+    document.getElementById("download-emergency").addEventListener("click", () => {
+        const active = document.getElementById("emergency-active").value === "true";
+        const payload = {
+            active,
+            level: document.getElementById("emergency-level").value,
+            title: active ? document.getElementById("emergency-title").value : "",
+            message: active ? document.getElementById("emergency-message").value : "",
+            issuedBy: active ? document.getElementById("emergency-issued-by").value : "",
+            issuedAt: active ? new Date().toISOString() : null,
+            expiresAt: null,
+            evacuationMaps: {},
+        };
+        downloadJson("emergency-alerts.json", payload);
+        const statusEl = document.getElementById("emergency-status");
+        statusEl.textContent = "Downloaded emergency-alerts.json. Replace content/global/emergency-alerts.json with it to publish.";
+        statusEl.className = "status ok";
+    });
+
+    function downloadJson(filename, obj) {
+        const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
