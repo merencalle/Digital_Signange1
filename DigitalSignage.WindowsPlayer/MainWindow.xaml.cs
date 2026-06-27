@@ -27,7 +27,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var baseUrl = Environment.GetEnvironmentVariable("CMS_BASE_URL") ?? "http://localhost:5109";
+        var baseUrl = Environment.GetEnvironmentVariable("CMS_BASE_URL") ?? "https://localhost:5110";
         _api = new CmsApiClient(baseUrl);
 
         // Jittered intervals so a fleet of players doesn't hammer the CMS in lockstep.

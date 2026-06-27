@@ -48,9 +48,18 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = MaxUploadBytes;
 });
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 5110;
+});
+
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = MaxUploadBytes;
+    // HTTPS is the channel devices/players should use - all traffic between
+    // Sentinel and the player (registration, heartbeat, playlist, media) is TLS-encrypted.
+    options.ListenAnyIP(5109);
+    options.ListenAnyIP(5110, listenOptions => listenOptions.UseHttps());
 });
 
 var app = builder.Build();
