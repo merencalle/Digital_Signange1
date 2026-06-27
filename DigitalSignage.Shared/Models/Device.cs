@@ -11,4 +11,6 @@ public class Device
     public string IpAddress { get; set; } = string.Empty;
     public string UniqueId { get; set; } = string.Empty;   // Unique identifier
     public int? PlaylistId { get; set; }
+    public string? PairingSecret { get; set; }              // Required for a NOT-yet-registered device to claim this row
+    public bool IsPaired { get; set; }                       // True once a player has successfully registered against this row
 }

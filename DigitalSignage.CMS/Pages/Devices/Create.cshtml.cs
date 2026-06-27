@@ -30,6 +30,7 @@ public class CreateModel : PageModel
 
         Device.Status = "Offline";
         Device.LastHeartbeat = DateTime.UtcNow;
+        Device.IsPaired = true; // admin typed the UniqueId by hand - that's an asserted trust, no pairing secret needed
 
         _context.Devices.Add(Device);
         await _context.SaveChangesAsync();

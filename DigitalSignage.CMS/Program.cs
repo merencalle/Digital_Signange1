@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<MediaConversionService>();
+builder.Services.AddSingleton<CertificateService>();
 
 builder.Services.AddSingleton<LogEntryQueue>();
 builder.Services.AddSingleton<Microsoft.Extensions.Logging.ILoggerProvider, DatabaseLoggerProvider>();
@@ -53,13 +54,27 @@ builder.Services.AddHttpsRedirection(options =>
     options.HttpsPort = 5110;
 });
 
+var managedCertPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "certs", "cms.pfx");
+
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = MaxUploadBytes;
     // HTTPS is the channel devices/players should use - all traffic between
     // Sentinel and the player (registration, heartbeat, playlist, media) is TLS-encrypted.
     options.ListenAnyIP(5109);
-    options.ListenAnyIP(5110, listenOptions => listenOptions.UseHttps());
+    options.ListenAnyIP(5110, listenOptions =>
+    {
+        if (File.Exists(managedCertPath))
+        {
+            // Wizard-generated/uploaded certificate (self-signed, CA-signed, or AD CS-issued).
+            listenOptions.UseHttps(managedCertPath);
+        }
+        else
+        {
+            // No managed cert yet - fall back to the ASP.NET Core dev certificate.
+            listenOptions.UseHttps();
+        }
+    });
 });
 
 var app = builder.Build();

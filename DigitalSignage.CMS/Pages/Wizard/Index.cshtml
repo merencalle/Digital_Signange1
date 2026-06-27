@@ -1,0 +1,76 @@
+@page
+@model DigitalSignage.CMS.Pages.Wizard.IndexModel
+@{
+    ViewData["Title"] = "Deployment Wizard";
+}
+
+<p class="text-muted">Pick the network this deployment runs on, and how strict you want the certificate/trust setup to be. The next steps adapt to your choice.</p>
+
+<form method="get" asp-page="Certificate">
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="Scenario" value="single" id="scenario-single" checked>
+                        <label class="form-check-label fw-bold" for="scenario-single"><i class="bi bi-laptop"></i> Single Machine</label>
+                    </div>
+                    <p class="text-muted small mb-0">CMS and Player on the same box, or just testing. Uses the trusted dev certificate already on this machine &mdash; nothing else to configure.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="Scenario" value="airgapped" id="scenario-airgapped">
+                        <label class="form-check-label fw-bold" for="scenario-airgapped"><i class="bi bi-shield-lock"></i> Closed / Airgapped LAN</label>
+                    </div>
+                    <p class="text-muted small mb-0">Multiple player devices, no internet, no internal CA available. Generates a self-signed certificate plus a script to trust it on every player machine.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="Scenario" value="adcs" id="scenario-adcs">
+                        <label class="form-check-label fw-bold" for="scenario-adcs"><i class="bi bi-building-lock"></i> Domain-Joined, Internal CA (AD CS)</label>
+                    </div>
+                    <p class="text-muted small mb-0">Your network has its own PKI/Certificate Authority. Generates a CSR for your CA team to sign &mdash; domain machines already trust the result automatically.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="Scenario" value="internet" id="scenario-internet">
+                        <label class="form-check-label fw-bold" for="scenario-internet"><i class="bi bi-globe"></i> Internet-Facing / Hybrid</label>
+                    </div>
+                    <p class="text-muted small mb-0">Sentinel is reachable by a real hostname. Upload a certificate from a public CA (or one you obtained via Let's Encrypt / your registrar).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h6 class="mb-3">How strict should trust be?</h6>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="Variant" value="standard" id="variant-standard" checked>
+                <label class="form-check-label" for="variant-standard">
+                    <strong>Standard (guaranteed to work)</strong> &mdash; trust the certificate, no extra steps. The simplest path that always works.
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="Variant" value="secure" id="variant-secure">
+                <label class="form-check-label" for="variant-secure">
+                    <strong>Secure</strong> &mdash; also pins the certificate's exact thumbprint into the Player's enrollment package (Airgapped LAN), or enables mutual TLS so the CMS verifies the Player's identity too (AD CS). A bit more setup, meaningfully harder to spoof.
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary"><i class="bi bi-arrow-right-circle"></i> Continue</button>
+</form>

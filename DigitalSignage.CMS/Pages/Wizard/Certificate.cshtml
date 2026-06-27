@@ -1,0 +1,219 @@
+@page
+@model DigitalSignage.CMS.Pages.Wizard.CertificateModel
+@{
+    ViewData["Title"] = "Deployment Wizard - Certificate";
+    var scenarioLabel = Model.Scenario switch
+    {
+        "single" => "Single Machine",
+        "airgapped" => "Closed / Airgapped LAN",
+        "adcs" => "Domain-Joined, Internal CA",
+        "internet" => "Internet-Facing / Hybrid",
+        _ => Model.Scenario
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <span class="badge rounded-pill text-bg-light border me-2">@scenarioLabel</span>
+        <span class="badge rounded-pill @(Model.Variant == "secure" ? "text-bg-primary" : "text-bg-secondary")">@(Model.Variant == "secure" ? "Secure" : "Standard")</span>
+    </div>
+    <a asp-page="Index" class="btn btn-sm btn-outline-secondary">Change scenario</a>
+</div>
+
+@if (Model.Message is not null)
+{
+    <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @Model.Message</div>
+}
+@if (Model.ErrorMessage is not null)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage</div>
+}
+
+<div class="card mb-4">
+    <div class="card-header">Current CMS Certificate</div>
+    <div class="card-body">
+        @if (Model.CurrentCert is null)
+        {
+            <p class="text-muted mb-0">No managed certificate yet &mdash; Sentinel is using the ASP.NET Core development certificate.</p>
+        }
+        else
+        {
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Subject</dt>
+                <dd class="col-sm-9">@Model.CurrentCert.Subject</dd>
+                <dt class="col-sm-3">Thumbprint</dt>
+                <dd class="col-sm-9"><code>@Model.CurrentCert.Thumbprint</code></dd>
+                <dt class="col-sm-3">Valid</dt>
+                <dd class="col-sm-9">@Model.CurrentCert.NotBefore.ToShortDateString() &ndash; @Model.CurrentCert.NotAfter.ToShortDateString()</dd>
+            </dl>
+        }
+    </div>
+</div>
+
+@if (Model.Scenario == "single")
+{
+    <div class="card">
+        <div class="card-header">Single Machine</div>
+        <div class="card-body">
+            <p>The trusted ASP.NET Core development certificate already covers this case &mdash; CMS and Player share the same machine's trust store. Nothing else is required.</p>
+            @if (Model.Variant == "secure")
+            {
+                <p class="text-muted small">Secure variant: generate a dedicated certificate instead of relying on the SDK's dev-cert, so it isn't tied to that cert's lifecycle.</p>
+                <form method="post">
+                    <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-6">
+                            <label class="form-label">Common Name</label>
+                            <input asp-for="CommonName" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Valid for (years)</label>
+                            <input asp-for="ValidityYears" class="form-control" type="number" min="1" max="20" />
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" asp-page-handler="GenerateSelfSigned" class="btn btn-primary w-100"><i class="bi bi-shield-check"></i> Generate</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+}
+else if (Model.Scenario == "airgapped")
+{
+    <div class="card mb-4">
+        <div class="card-header">Generate Self-Signed Certificate</div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label">Common Name (hostname or IP players will connect to)</label>
+                        <input asp-for="CommonName" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Valid for (years)</label>
+                        <input asp-for="ValidityYears" class="form-control" type="number" min="1" max="20" />
+                        <div class="form-text">Long validity recommended &mdash; renewing across an airgapped fleet is painful.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" asp-page-handler="GenerateSelfSigned" class="btn btn-primary w-100"><i class="bi bi-shield-check"></i> Generate</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.CurrentCert is not null)
+    {
+        <div class="card">
+            <div class="card-header">Trust Files for Player Machines</div>
+            <div class="card-body">
+                <p>Copy both files to each Player machine (same folder), then run the script <strong>as Administrator</strong>.</p>
+                <a asp-page-handler="DownloadCer" class="btn btn-outline-secondary me-2"><i class="bi bi-download"></i> sentinel-cms.cer</a>
+                <a asp-page-handler="DownloadTrustScript" class="btn btn-outline-secondary"><i class="bi bi-download"></i> Install-TrustedCert.ps1</a>
+                @if (Model.Variant == "secure")
+                {
+                    <p class="text-muted small mt-3 mb-0">Secure variant: this certificate's thumbprint will automatically be pinned into every enrollment package you generate in the next step.</p>
+                }
+            </div>
+        </div>
+    }
+}
+else if (Model.Scenario == "adcs")
+{
+    <div class="card mb-4">
+        <div class="card-header">1. Generate a Certificate Signing Request</div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label">Common Name (hostname players will connect to)</label>
+                        <input asp-for="CommonName" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" asp-page-handler="GenerateCsr" class="btn btn-primary w-100"><i class="bi bi-file-earmark-text"></i> Generate CSR</button>
+                    </div>
+                </div>
+            </form>
+            @if (Model.PendingCsr is not null)
+            {
+                <hr />
+                <p>Submit this CSR to your CA team (or via <code>certreq -submit sentinel-cms.csr</code> against your enterprise CA), then come back and upload the signed certificate below.</p>
+                <textarea class="form-control mb-2" rows="8" readonly>@Model.PendingCsr</textarea>
+                <a asp-page-handler="DownloadCsr" class="btn btn-outline-secondary"><i class="bi bi-download"></i> sentinel-cms.csr</a>
+            }
+        </div>
+    </div>
+
+    @if (Model.PendingCsr is not null)
+    {
+        <div class="card mb-4">
+            <div class="card-header">2. Upload the Signed Certificate</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-8">
+                            <label class="form-label">Signed certificate file (.cer)</label>
+                            <input asp-for="UploadedCertFile" type="file" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" asp-page-handler="CompleteCsr" class="btn btn-primary w-100"><i class="bi bi-upload"></i> Install</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.Variant == "secure")
+    {
+        <div class="card">
+            <div class="card-header">Secure Variant: Mutual TLS</div>
+            <div class="card-body">
+                <p class="mb-0">Domain machines already trust your internal CA, so the server side here is straightforward. For full mutual TLS, each Player also needs its own client certificate issued by the same CA &mdash; that's a manual step with your PKI team for now (this wizard issues the <em>server</em> certificate only). Once players have client certs, enabling <code>ClientCertificateMode.RequireCertificate</code> on the CMS completes the lockdown.</p>
+            </div>
+        </div>
+    }
+}
+else if (Model.Scenario == "internet")
+{
+    <div class="card mb-4">
+        <div class="card-header">Upload a Public CA Certificate</div>
+        <div class="card-body">
+            <p class="text-muted small">Get a certificate for your hostname from a public CA (purchased, or via Let's Encrypt/<code>certbot</code> if this box has inbound port 80/443 reachable from the internet) and upload the resulting <code>.pfx</code> here.</p>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Scenario" /><input type="hidden" asp-for="Variant" />
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label">Certificate file (.pfx)</label>
+                        <input asp-for="UploadedCertFile" type="file" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Password (if any)</label>
+                        <input asp-for="UploadedCertPassword" type="password" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" asp-page-handler="UploadPfx" class="btn btn-primary w-100"><i class="bi bi-upload"></i> Install</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Variant == "secure")
+    {
+        <div class="card">
+            <div class="card-header">Secure Variant</div>
+            <div class="card-body mb-0">
+                <p class="mb-0">This is the one scenario actually exposed to the internet &mdash; beyond the certificate, make sure HSTS stays enabled (it already is outside Development) and keep the CMS behind a firewall rule that only opens 443/5110, not the admin UI broadly.</p>
+            </div>
+        </div>
+    }
+}
+
+<div class="mt-4">
+    <a asp-page="Enrollment" asp-route-Scenario="@Model.Scenario" asp-route-Variant="@Model.Variant" class="btn btn-outline-primary"><i class="bi bi-arrow-right-circle"></i> Next: Enroll a Player</a>
+</div>
