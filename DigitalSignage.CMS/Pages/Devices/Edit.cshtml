@@ -4,45 +4,53 @@
     ViewData["Title"] = "Edit Device";
 }
 
-<h1>Edit Device</h1>
-
-<form method="post">
-    <input type="hidden" asp-for="Device.Id" />
-    <div class="mb-3">
-        <label asp-for="Device.Name" class="form-label"></label>
-        <input asp-for="Device.Name" class="form-control" />
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="Device.Id" />
+                    <div class="mb-3">
+                        <label asp-for="Device.Name" class="form-label"></label>
+                        <input asp-for="Device.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.DeviceType" class="form-label"></label>
+                        <input asp-for="Device.DeviceType" class="form-control" placeholder="NUC, Pi5, Samsung, Cisco" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.Location" class="form-label"></label>
+                        <input asp-for="Device.Location" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.Status" class="form-label"></label>
+                        <select asp-for="Device.Status" class="form-select">
+                            <option>Online</option>
+                            <option>Offline</option>
+                            <option>Error</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.IpAddress" class="form-label"></label>
+                        <input asp-for="Device.IpAddress" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.UniqueId" class="form-label"></label>
+                        <input asp-for="Device.UniqueId" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Device.PlaylistId" class="form-label">Playlist</label>
+                        <select asp-for="Device.PlaylistId" asp-items="Model.PlaylistOptions" class="form-select">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <input type="hidden" asp-for="Device.LastHeartbeat" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Device.DeviceType" class="form-label"></label>
-        <input asp-for="Device.DeviceType" class="form-control" placeholder="NUC, Pi5, Samsung, Cisco" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Device.Location" class="form-label"></label>
-        <input asp-for="Device.Location" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Device.Status" class="form-label"></label>
-        <select asp-for="Device.Status" class="form-select">
-            <option>Online</option>
-            <option>Offline</option>
-            <option>Error</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Device.IpAddress" class="form-label"></label>
-        <input asp-for="Device.IpAddress" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Device.UniqueId" class="form-label"></label>
-        <input asp-for="Device.UniqueId" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Device.PlaylistId" class="form-label">Playlist</label>
-        <select asp-for="Device.PlaylistId" asp-items="Model.PlaylistOptions" class="form-select">
-            <option value="">-- None --</option>
-        </select>
-    </div>
-    <input type="hidden" asp-for="Device.LastHeartbeat" />
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>

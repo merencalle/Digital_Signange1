@@ -1,0 +1,10 @@
+@model string
+@{
+    var (badgeClass, icon) = Model switch
+    {
+        "Online" => ("text-bg-success", "bi-check-circle-fill"),
+        "Error" => ("text-bg-danger", "bi-exclamation-triangle-fill"),
+        _ => ("text-bg-secondary", "bi-power")
+    };
+}
+<span class="badge rounded-pill @badgeClass"><i class="bi @icon"></i> @Model</span>

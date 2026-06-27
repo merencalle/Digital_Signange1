@@ -4,33 +4,40 @@
     ViewData["Title"] = "Device Details";
 }
 
-<h1>Device Details</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Device.Name</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.Device.Name</dd>
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9">@Model.Device.DeviceType</dd>
 
-    <dt class="col-sm-3">Type</dt>
-    <dd class="col-sm-9">@Model.Device.DeviceType</dd>
+                    <dt class="col-sm-3">Location</dt>
+                    <dd class="col-sm-9">@Model.Device.Location</dd>
 
-    <dt class="col-sm-3">Location</dt>
-    <dd class="col-sm-9">@Model.Device.Location</dd>
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9"><partial name="_StatusBadge" model="@Model.Device.Status" /></dd>
 
-    <dt class="col-sm-3">Status</dt>
-    <dd class="col-sm-9">@Model.Device.Status</dd>
+                    <dt class="col-sm-3">IP Address</dt>
+                    <dd class="col-sm-9">@Model.Device.IpAddress</dd>
 
-    <dt class="col-sm-3">IP Address</dt>
-    <dd class="col-sm-9">@Model.Device.IpAddress</dd>
+                    <dt class="col-sm-3">Unique Id</dt>
+                    <dd class="col-sm-9"><code>@Model.Device.UniqueId</code></dd>
 
-    <dt class="col-sm-3">Unique Id</dt>
-    <dd class="col-sm-9">@Model.Device.UniqueId</dd>
+                    <dt class="col-sm-3">Last Heartbeat</dt>
+                    <dd class="col-sm-9">@Model.Device.LastHeartbeat</dd>
 
-    <dt class="col-sm-3">Last Heartbeat</dt>
-    <dd class="col-sm-9">@Model.Device.LastHeartbeat</dd>
-
-    <dt class="col-sm-3">Playlist</dt>
-    <dd class="col-sm-9">@Model.PlaylistName</dd>
-</dl>
-
-<a asp-page="Edit" asp-route-id="@Model.Device.Id" class="btn btn-secondary">Edit</a>
-<a asp-page="Index" class="btn btn-link">Back to list</a>
+                    <dt class="col-sm-3">Playlist</dt>
+                    <dd class="col-sm-9">@Model.PlaylistName</dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-white d-flex gap-2">
+                <a asp-page="Edit" asp-route-id="@Model.Device.Id" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i> Edit</a>
+                <a asp-page="Index" class="btn btn-link">Back to list</a>
+            </div>
+        </div>
+    </div>
+</div>

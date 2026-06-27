@@ -1,0 +1,103 @@
+@page
+@model DigitalSignage.CMS.Pages.Logs.IndexModel
+@{
+    ViewData["Title"] = "Logs";
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-2">
+                <label class="form-label">Level</label>
+                <select name="Level" class="form-select" asp-for="Level">
+                    <option value="">All</option>
+                    <option>Critical</option>
+                    <option>Error</option>
+                    <option>Warning</option>
+                    <option>Information</option>
+                    <option>Debug</option>
+                    <option>Trace</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Category contains</label>
+                <input name="Category" class="form-control" asp-for="Category" placeholder="Traffic, Device, ContentItems..." />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Message contains</label>
+                <input name="Search" class="form-control" asp-for="Search" placeholder="Search message text" />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Filter</button>
+                <a asp-page="Index" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted">@Model.TotalCount entries</span>
+    <form method="post" asp-page-handler="Clear" onsubmit="return confirm('Clear all log entries? This cannot be undone.');">
+        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Clear All Logs</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+@if (Model.Entries.Count == 0)
+{
+        <p class="text-muted p-3 mb-0">No log entries match these filters.</p>
+}
+else
+{
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Time (UTC)</th>
+                    <th>Level</th>
+                    <th>Category</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+@foreach (var entry in Model.Entries)
+{
+                <tr>
+                    <td class="text-nowrap">@entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td><partial name="_LogLevelBadge" model="@entry.Level" /></td>
+                    <td><code class="small">@entry.Category</code></td>
+                    <td>
+                        @entry.Message
+                        @if (entry.RequestPath is not null)
+                        {
+                            <div class="text-muted small">@entry.RemoteIp &mdash; @entry.DurationMs ms</div>
+                        }
+                        @if (entry.Exception is not null)
+                        {
+                            <details class="mt-1">
+                                <summary class="small text-danger">Exception details</summary>
+                                <pre class="small bg-light p-2 mb-0">@entry.Exception</pre>
+                            </details>
+                        }
+                    </td>
+                </tr>
+}
+            </tbody>
+        </table>
+}
+    </div>
+</div>
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-3">
+        <ul class="pagination">
+            @for (var p = 1; p <= Model.TotalPages; p++)
+            {
+                <li class="page-item @(p == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-page="Index" asp-route-PageNumber="@p" asp-route-Level="@Model.Level" asp-route-Category="@Model.Category" asp-route-Search="@Model.Search">@p</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

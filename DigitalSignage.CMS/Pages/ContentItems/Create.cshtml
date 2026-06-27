@@ -4,30 +4,33 @@
     ViewData["Title"] = "Add Content";
 }
 
-<h1>Add Content</h1>
-
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="ContentItem.Name" class="form-label"></label>
-        <input asp-for="ContentItem.Name" class="form-control" />
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                @if (Model.UploadError is not null)
+                {
+                    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Model.UploadError</div>
+                }
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label asp-for="ContentItem.Name" class="form-label"></label>
+                        <input asp-for="ContentItem.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="UploadedFile" class="form-label">File</label>
+                        <input asp-for="UploadedFile" type="file" class="form-control" />
+                        <div class="form-text">
+                            Images (png, jpg, gif, bmp, webp, heic...) and video (mp4, mov, avi, mkv, wmv, webm) are accepted.
+                            Anything not natively playable is converted automatically &mdash; images to PNG, video to MP4.
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-upload"></i> Upload</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.ContentType" class="form-label"></label>
-        <select asp-for="ContentItem.ContentType" class="form-select">
-            <option>Image</option>
-            <option>Video</option>
-            <option>HTML</option>
-            <option>Widget</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.FilePath" class="form-label"></label>
-        <input asp-for="ContentItem.FilePath" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.FileSize" class="form-label"></label>
-        <input asp-for="ContentItem.FileSize" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>

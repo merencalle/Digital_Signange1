@@ -1,10 +1,95 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-success"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+                <div class="stat-value">@Model.OnlineDeviceCount</div>
+                <div class="stat-label">Devices Online</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-secondary"><i class="bi bi-power"></i></div>
+            <div>
+                <div class="stat-value">@Model.OfflineDeviceCount</div>
+                <div class="stat-label">Devices Offline</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-info"><i class="bi bi-images"></i></div>
+            <div>
+                <div class="stat-value">@Model.ContentItemCount</div>
+                <div class="stat-label">Content Items</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-icon bg-primary"><i class="bi bi-collection-play"></i></div>
+            <div>
+                <div class="stat-value">@Model.PlaylistCount</div>
+                <div class="stat-label">Playlists</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Recent Devices</span>
+                <a asp-page="/Devices/Index" class="btn btn-sm btn-outline-secondary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentDevices.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No devices have registered yet.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Last Heartbeat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var device in Model.RecentDevices)
+                        {
+                            <tr>
+                                <td><a asp-page="/Devices/Details" asp-route-id="@device.Id">@device.Name</a></td>
+                                <td>@device.DeviceType</td>
+                                <td><partial name="_StatusBadge" model="@device.Status" /></td>
+                                <td>@device.LastHeartbeat</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">Quick Actions</div>
+            <div class="card-body d-flex flex-column gap-2">
+                <a asp-page="/Devices/Index" class="btn btn-outline-primary text-start"><i class="bi bi-hdd-network"></i> Manage Devices</a>
+                <a asp-page="/ContentItems/Create" class="btn btn-outline-primary text-start"><i class="bi bi-plus-circle"></i> Add Content</a>
+                <a asp-page="/Playlists/Create" class="btn btn-outline-primary text-start"><i class="bi bi-plus-circle"></i> Create Playlist</a>
+            </div>
+        </div>
+    </div>
 </div>

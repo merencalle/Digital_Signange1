@@ -4,32 +4,40 @@
     ViewData["Title"] = "Edit Content";
 }
 
-<h1>Edit Content</h1>
-
-<form method="post">
-    <input type="hidden" asp-for="ContentItem.Id" />
-    <input type="hidden" asp-for="ContentItem.UploadDate" />
-    <div class="mb-3">
-        <label asp-for="ContentItem.Name" class="form-label"></label>
-        <input asp-for="ContentItem.Name" class="form-control" />
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="ContentItem.Id" />
+                    <input type="hidden" asp-for="ContentItem.UploadDate" />
+                    <div class="mb-3">
+                        <label asp-for="ContentItem.Name" class="form-label"></label>
+                        <input asp-for="ContentItem.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContentItem.ContentType" class="form-label"></label>
+                        <select asp-for="ContentItem.ContentType" class="form-select">
+                            <option>Image</option>
+                            <option>Video</option>
+                            <option>HTML</option>
+                            <option>Widget</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContentItem.FilePath" class="form-label"></label>
+                        <input asp-for="ContentItem.FilePath" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContentItem.FileSize" class="form-label"></label>
+                        <input asp-for="ContentItem.FileSize" class="form-control" />
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.ContentType" class="form-label"></label>
-        <select asp-for="ContentItem.ContentType" class="form-select">
-            <option>Image</option>
-            <option>Video</option>
-            <option>HTML</option>
-            <option>Widget</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.FilePath" class="form-label"></label>
-        <input asp-for="ContentItem.FilePath" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="ContentItem.FileSize" class="form-label"></label>
-        <input asp-for="ContentItem.FileSize" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>

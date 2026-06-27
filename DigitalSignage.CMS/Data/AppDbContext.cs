@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using DigitalSignage.CMS.Models;
 using DigitalSignage.Shared.Models;
 
 namespace DigitalSignage.CMS.Data;
@@ -12,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Device> Devices { get; set; } = null!;
     public DbSet<ContentItem> ContentItems { get; set; } = null!;
     public DbSet<Playlist> Playlists { get; set; } = null!;
+    public DbSet<LogEntry> LogEntries { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

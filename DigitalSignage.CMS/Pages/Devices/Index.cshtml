@@ -4,40 +4,49 @@
     ViewData["Title"] = "Devices";
 }
 
-<h1>Devices</h1>
+<div class="d-flex justify-content-end mb-3">
+    <a asp-page="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Device</a>
+</div>
 
-<p>
-    <a asp-page="Create" class="btn btn-primary">Add Device</a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>IP Address</th>
-            <th>Last Heartbeat</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="card">
+    <div class="card-body p-0">
+@if (Model.Devices.Count == 0)
+{
+        <p class="text-muted p-3 mb-0">No devices yet. Run the WindowsPlayer app to register one, or add one manually.</p>
+}
+else
+{
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>IP Address</th>
+                    <th>Last Heartbeat</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
 @foreach (var device in Model.Devices)
 {
-        <tr>
-            <td>@device.Name</td>
-            <td>@device.DeviceType</td>
-            <td>@device.Location</td>
-            <td>@device.Status</td>
-            <td>@device.IpAddress</td>
-            <td>@device.LastHeartbeat</td>
-            <td>
-                <a asp-page="Edit" asp-route-id="@device.Id" class="btn btn-sm btn-secondary">Edit</a>
-                <a asp-page="Details" asp-route-id="@device.Id" class="btn btn-sm btn-outline-secondary">Details</a>
-                <a asp-page="Delete" asp-route-id="@device.Id" class="btn btn-sm btn-danger">Delete</a>
-            </td>
-        </tr>
+                <tr>
+                    <td>@device.Name</td>
+                    <td>@device.DeviceType</td>
+                    <td>@device.Location</td>
+                    <td><partial name="_StatusBadge" model="@device.Status" /></td>
+                    <td>@device.IpAddress</td>
+                    <td>@device.LastHeartbeat</td>
+                    <td class="text-end">
+                        <a asp-page="Edit" asp-route-id="@device.Id" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <a asp-page="Details" asp-route-id="@device.Id" class="btn btn-sm btn-outline-secondary" title="Details"><i class="bi bi-eye"></i></a>
+                        <a asp-page="Delete" asp-route-id="@device.Id" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
 }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+}
+    </div>
+</div>

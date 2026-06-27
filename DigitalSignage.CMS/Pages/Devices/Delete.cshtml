@@ -4,23 +4,29 @@
     ViewData["Title"] = "Delete Device";
 }
 
-<h1>Delete Device</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-danger-subtle">
+            <div class="card-body">
+                <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Are you sure you want to delete this device?</p>
+                <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Device.Name</dd>
 
-<p>Are you sure you want to delete this device?</p>
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9">@Model.Device.DeviceType</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.Device.Name</dd>
-
-    <dt class="col-sm-3">Type</dt>
-    <dd class="col-sm-9">@Model.Device.DeviceType</dd>
-
-    <dt class="col-sm-3">Location</dt>
-    <dd class="col-sm-9">@Model.Device.Location</dd>
-</dl>
-
-<form method="post">
-    <input type="hidden" asp-for="Device.Id" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+                    <dt class="col-sm-3">Location</dt>
+                    <dd class="col-sm-9">@Model.Device.Location</dd>
+                </dl>
+                <form method="post">
+                    <input type="hidden" asp-for="Device.Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

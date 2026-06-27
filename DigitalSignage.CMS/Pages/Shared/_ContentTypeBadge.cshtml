@@ -1,0 +1,12 @@
+@model string
+@{
+    var (badgeClass, icon) = Model switch
+    {
+        "Image" => ("text-bg-info", "bi-image"),
+        "Video" => ("text-bg-primary", "bi-film"),
+        "HTML" => ("text-bg-warning", "bi-code-slash"),
+        "Widget" => ("text-bg-secondary", "bi-puzzle"),
+        _ => ("text-bg-secondary", "bi-question-circle")
+    };
+}
+<span class="badge rounded-pill @badgeClass"><i class="bi @icon"></i> @Model</span>

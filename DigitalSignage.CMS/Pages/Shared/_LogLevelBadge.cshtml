@@ -1,0 +1,14 @@
+@model string
+@{
+    var badgeClass = Model switch
+    {
+        "Critical" => "text-bg-danger",
+        "Error" => "text-bg-danger",
+        "Warning" => "text-bg-warning",
+        "Information" => "text-bg-info",
+        "Debug" => "text-bg-secondary",
+        "Trace" => "text-bg-secondary",
+        _ => "text-bg-light border"
+    };
+}
+<span class="badge rounded-pill @badgeClass">@Model</span>

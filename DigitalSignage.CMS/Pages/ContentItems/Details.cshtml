@@ -4,24 +4,31 @@
     ViewData["Title"] = "Content Details";
 }
 
-<h1>Content Details</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.ContentItem.Name</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.ContentItem.Name</dd>
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9"><partial name="_ContentTypeBadge" model="@Model.ContentItem.ContentType" /></dd>
 
-    <dt class="col-sm-3">Type</dt>
-    <dd class="col-sm-9">@Model.ContentItem.ContentType</dd>
+                    <dt class="col-sm-3">File Path</dt>
+                    <dd class="col-sm-9"><code>@Model.ContentItem.FilePath</code></dd>
 
-    <dt class="col-sm-3">File Path</dt>
-    <dd class="col-sm-9">@Model.ContentItem.FilePath</dd>
+                    <dt class="col-sm-3">File Size</dt>
+                    <dd class="col-sm-9">@Model.ContentItem.FileSize.ToString("N0") bytes</dd>
 
-    <dt class="col-sm-3">File Size</dt>
-    <dd class="col-sm-9">@Model.ContentItem.FileSize</dd>
-
-    <dt class="col-sm-3">Upload Date</dt>
-    <dd class="col-sm-9">@Model.ContentItem.UploadDate</dd>
-</dl>
-
-<a asp-page="Edit" asp-route-id="@Model.ContentItem.Id" class="btn btn-secondary">Edit</a>
-<a asp-page="Index" class="btn btn-link">Back to list</a>
+                    <dt class="col-sm-3">Upload Date</dt>
+                    <dd class="col-sm-9">@Model.ContentItem.UploadDate</dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-white d-flex gap-2">
+                <a asp-page="Edit" asp-route-id="@Model.ContentItem.Id" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i> Edit</a>
+                <a asp-page="Index" class="btn btn-link">Back to list</a>
+            </div>
+        </div>
+    </div>
+</div>
