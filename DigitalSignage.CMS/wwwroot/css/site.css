@@ -1,8 +1,12 @@
 :root {
   --sidebar-width: 240px;
-  --sidebar-bg: #1b2436;
-  --sidebar-bg-active: #2a3650;
-  --accent: #3b82f6;
+  --navy-deep: #060f24;
+  --navy: #0d1f3f;
+  --navy-mid: #16294f;
+  --steel: #8a96a6;
+  --steel-light: #c4ccd6;
+  --accent: #c8202f;
+  --accent-dark: #9c1822;
 }
 
 html, body {
@@ -10,7 +14,7 @@ html, body {
 }
 
 body {
-  background-color: #f4f6fa;
+  background-color: #eef0f3;
 }
 
 .app-shell {
@@ -21,11 +25,12 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
-  background-color: var(--sidebar-bg);
-  color: #cbd5e1;
+  background-color: var(--navy-deep);
+  color: var(--steel-light);
   position: sticky;
   top: 0;
   height: 100vh;
+  border-right: 2px solid var(--accent);
 }
 
 .sidebar-brand {
@@ -38,6 +43,14 @@ body {
   font-weight: 600;
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.02em;
+}
+
+.sidebar-brand img,
+.sidebar-brand .brand-icon {
+  height: 2.1rem;
+  width: 2.1rem;
+  flex-shrink: 0;
 }
 
 .sidebar-brand i {
@@ -51,29 +64,36 @@ body {
 }
 
 .sidebar-nav .nav-link {
-  color: #cbd5e1;
-  border-radius: 0.5rem;
+  color: var(--steel-light);
+  border-radius: 0.25rem;
   padding: 0.6rem 0.9rem;
   display: flex;
   align-items: center;
   gap: 0.65rem;
   font-size: 0.95rem;
+  border-left: 3px solid transparent;
 }
 
 .sidebar-nav .nav-link i {
   font-size: 1.05rem;
   width: 1.2rem;
   text-align: center;
+  color: var(--steel);
 }
 
 .sidebar-nav .nav-link:hover {
-  background-color: var(--sidebar-bg-active);
+  background-color: var(--navy-mid);
   color: #fff;
 }
 
 .sidebar-nav .nav-link.active {
-  background-color: var(--accent);
+  background-color: var(--navy-mid);
   color: #fff;
+  border-left-color: var(--accent);
+}
+
+.sidebar-nav .nav-link.active i {
+  color: var(--accent);
 }
 
 .main-area {
@@ -86,14 +106,16 @@ body {
 .topbar {
   padding: 1.1rem 2rem;
   background-color: #fff;
-  border-bottom: 1px solid #e5e9f0;
+  border-bottom: 1px solid #dde1e7;
+  border-top: 3px solid var(--accent);
 }
 
 .page-title {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0;
-  color: #1b2436;
+  color: var(--navy);
+  letter-spacing: 0.01em;
 }
 
 .content-area {
@@ -102,30 +124,32 @@ body {
 
 .card {
   border: none;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(6, 15, 36, 0.1);
 }
 
 .card-header {
   background-color: #fff;
   border-bottom: 1px solid #eef1f6;
   font-weight: 600;
+  color: var(--navy);
 }
 
 .stat-card {
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   padding: 1.25rem 1.5rem;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(6, 15, 36, 0.1);
   display: flex;
   align-items: center;
   gap: 1rem;
+  border-bottom: 3px solid var(--steel-light);
 }
 
 .stat-card .stat-icon {
   width: 3rem;
   height: 3rem;
-  border-radius: 0.65rem;
+  border-radius: 0.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,7 +160,7 @@ body {
 .stat-card .stat-value {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1b2436;
+  color: var(--navy);
   line-height: 1.1;
 }
 
@@ -153,10 +177,59 @@ body {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: #6b7280;
-  border-bottom-width: 1px;
+  color: var(--navy);
+  border-bottom: 2px solid var(--steel-light);
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--accent);
+}
+
+/* Re-theme Bootstrap's blue "primary" to the command's red accent */
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.btn-outline-primary {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.bg-primary,
+.text-bg-primary {
+  background-color: var(--accent) !important;
+}
+
+.bg-navy {
+  background-color: var(--navy) !important;
+}
+
+a {
+  color: var(--accent-dark);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+.page-item.active .page-link {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.page-link {
+  color: var(--accent-dark);
 }

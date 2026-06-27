@@ -83,6 +83,7 @@ public class CreateModel : PageModel
             var savedFullPath = Path.Combine(mediaDirectory, savedFileName);
             ContentItem.FilePath = $"media/{savedFileName}";
             ContentItem.FileSize = new FileInfo(savedFullPath).Length;
+            ContentItem.FileHash = await MediaConversionService.ComputeFileHashAsync(savedFullPath);
             ContentItem.UploadDate = DateTime.UtcNow;
         }
         finally

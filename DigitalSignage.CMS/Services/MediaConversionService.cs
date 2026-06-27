@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using Xabe.FFmpeg;
@@ -6,6 +7,14 @@ namespace DigitalSignage.CMS.Services;
 
 public class MediaConversionService
 {
+    public static async Task<string> ComputeFileHashAsync(string filePath)
+    {
+        using var sha256 = SHA256.Create();
+        await using var stream = File.OpenRead(filePath);
+        var hash = await sha256.ComputeHashAsync(stream);
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
     private static readonly string[] NativeImageExtensions = { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".tiff", ".tif" };
     private static readonly string[] ConvertibleImageExtensions = { ".webp", ".heic", ".heif" };
     private static readonly string[] NativeVideoExtensions = { ".mp4" };

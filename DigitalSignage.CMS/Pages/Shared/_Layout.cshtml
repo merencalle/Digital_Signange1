@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Digital Signage</title>
+    <title>@ViewData["Title"] - Sentinel</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -13,7 +13,7 @@
         <nav class="sidebar d-flex flex-column">
             <a class="sidebar-brand" asp-area="" asp-page="/Index">
                 <i class="bi bi-display"></i>
-                <span>Digital Signage</span>
+                <span>Sentinel</span>
             </a>
             <ul class="nav flex-column sidebar-nav">
                 <li class="nav-item">
@@ -46,6 +46,14 @@
         <div class="main-area">
             <header class="topbar d-flex align-items-center justify-content-between">
                 <h1 class="page-title">@ViewData["Title"]</h1>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form method="post" asp-page="/Account/Logout" class="d-flex align-items-center gap-2 mb-0">
+                        <span class="text-muted small"><i class="bi bi-person-circle"></i> @User.Identity!.Name</span>
+                        <a asp-page="/Account/ChangePassword" class="btn btn-sm btn-outline-secondary"><i class="bi bi-key"></i> Change Password</a>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-box-arrow-right"></i> Sign Out</button>
+                    </form>
+                }
             </header>
             <main role="main" class="content-area">
                 @RenderBody()
