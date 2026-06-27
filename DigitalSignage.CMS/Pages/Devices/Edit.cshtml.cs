@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
 using DigitalSignage.Shared.Models;
 
@@ -17,6 +19,8 @@ public class EditModel : PageModel
     [BindProperty]
     public Device Device { get; set; } = new();
 
+    public List<SelectListItem> PlaylistOptions { get; set; } = new();
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var device = await _context.Devices.FindAsync(id);
@@ -26,6 +30,7 @@ public class EditModel : PageModel
         }
 
         Device = device;
+        await LoadPlaylistOptionsAsync();
         return Page();
     }
 
@@ -33,6 +38,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            await LoadPlaylistOptionsAsync();
             return Page();
         }
 
@@ -40,5 +46,13 @@ public class EditModel : PageModel
         await _context.SaveChangesAsync();
 
         return RedirectToPage("Index");
+    }
+
+    private async Task LoadPlaylistOptionsAsync()
+    {
+        var playlists = await _context.Playlists.OrderBy(p => p.Name).ToListAsync();
+        PlaylistOptions = playlists
+            .Select(p => new SelectListItem(p.Name, p.Id.ToString()))
+            .ToList();
     }
 }

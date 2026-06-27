@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
+using DigitalSignage.CMS.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,5 +26,6 @@ app.UseRouting();
 app.UseAntiforgery();
 
 app.MapRazorPages();
+app.MapDeviceEndpoints();
 
 app.Run();

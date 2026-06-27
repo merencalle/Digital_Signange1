@@ -27,6 +27,9 @@
 
     <dt class="col-sm-3">Last Heartbeat</dt>
     <dd class="col-sm-9">@Model.Device.LastHeartbeat</dd>
+
+    <dt class="col-sm-3">Playlist</dt>
+    <dd class="col-sm-9">@Model.PlaylistName</dd>
 </dl>
 
 <a asp-page="Edit" asp-route-id="@Model.Device.Id" class="btn btn-secondary">Edit</a>

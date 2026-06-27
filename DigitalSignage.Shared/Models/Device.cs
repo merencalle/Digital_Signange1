@@ -10,4 +10,5 @@ public class Device
     public DateTime LastHeartbeat { get; set; }
     public string IpAddress { get; set; } = string.Empty;
     public string UniqueId { get; set; } = string.Empty;   // Unique identifier
+    public int? PlaylistId { get; set; }
 }

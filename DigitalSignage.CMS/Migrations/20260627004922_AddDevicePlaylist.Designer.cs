@@ -3,6 +3,7 @@ using System;
 using DigitalSignage.CMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalSignage.CMS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627004922_AddDevicePlaylist")]
+    partial class AddDevicePlaylist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -102,6 +105,7 @@ namespace DigitalSignage.CMS.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ScheduleJson")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

@@ -16,6 +16,8 @@ public class DetailsModel : PageModel
 
     public Device Device { get; set; } = new();
 
+    public string PlaylistName { get; set; } = "None";
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var device = await _context.Devices.FindAsync(id);
@@ -25,6 +27,16 @@ public class DetailsModel : PageModel
         }
 
         Device = device;
+
+        if (device.PlaylistId is not null)
+        {
+            var playlist = await _context.Playlists.FindAsync(device.PlaylistId.Value);
+            if (playlist is not null)
+            {
+                PlaylistName = playlist.Name;
+            }
+        }
+
         return Page();
     }
 }

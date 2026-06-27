@@ -1,0 +1,35 @@
+@page
+@model DigitalSignage.CMS.Pages.Playlists.IndexModel
+@{
+    ViewData["Title"] = "Playlists";
+}
+
+<h1>Playlists</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Add Playlist</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Content Items</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var playlist in Model.Playlists)
+{
+        <tr>
+            <td>@playlist.Name</td>
+            <td>@playlist.ContentIds.Count</td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@playlist.Id" class="btn btn-sm btn-secondary">Edit</a>
+                <a asp-page="Details" asp-route-id="@playlist.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-page="Delete" asp-route-id="@playlist.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

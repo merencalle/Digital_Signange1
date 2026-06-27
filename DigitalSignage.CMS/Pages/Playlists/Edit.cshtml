@@ -1,0 +1,23 @@
+@page "{id:int}"
+@model DigitalSignage.CMS.Pages.Playlists.EditModel
+@{
+    ViewData["Title"] = "Edit Playlist";
+}
+
+<h1>Edit Playlist</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Playlist.Id" />
+    <input type="hidden" asp-for="Playlist.ScheduleJson" />
+    <div class="mb-3">
+        <label asp-for="Playlist.Name" class="form-label"></label>
+        <input asp-for="Playlist.Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="SelectedContentIds" class="form-label">Content Items</label>
+        <select asp-for="SelectedContentIds" asp-items="Model.ContentItemOptions" class="form-select" multiple size="8"></select>
+        <div class="form-text">Hold Ctrl (Cmd on Mac) to select multiple items.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

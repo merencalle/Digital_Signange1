@@ -1,0 +1,27 @@
+@page "{id:int}"
+@model DigitalSignage.CMS.Pages.ContentItems.DetailsModel
+@{
+    ViewData["Title"] = "Content Details";
+}
+
+<h1>Content Details</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.ContentItem.Name</dd>
+
+    <dt class="col-sm-3">Type</dt>
+    <dd class="col-sm-9">@Model.ContentItem.ContentType</dd>
+
+    <dt class="col-sm-3">File Path</dt>
+    <dd class="col-sm-9">@Model.ContentItem.FilePath</dd>
+
+    <dt class="col-sm-3">File Size</dt>
+    <dd class="col-sm-9">@Model.ContentItem.FileSize</dd>
+
+    <dt class="col-sm-3">Upload Date</dt>
+    <dd class="col-sm-9">@Model.ContentItem.UploadDate</dd>
+</dl>
+
+<a asp-page="Edit" asp-route-id="@Model.ContentItem.Id" class="btn btn-secondary">Edit</a>
+<a asp-page="Index" class="btn btn-link">Back to list</a>

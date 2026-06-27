@@ -1,0 +1,33 @@
+@page
+@model DigitalSignage.CMS.Pages.ContentItems.CreateModel
+@{
+    ViewData["Title"] = "Add Content";
+}
+
+<h1>Add Content</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="ContentItem.Name" class="form-label"></label>
+        <input asp-for="ContentItem.Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ContentItem.ContentType" class="form-label"></label>
+        <select asp-for="ContentItem.ContentType" class="form-select">
+            <option>Image</option>
+            <option>Video</option>
+            <option>HTML</option>
+            <option>Widget</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ContentItem.FilePath" class="form-label"></label>
+        <input asp-for="ContentItem.FilePath" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ContentItem.FileSize" class="form-label"></label>
+        <input asp-for="ContentItem.FileSize" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

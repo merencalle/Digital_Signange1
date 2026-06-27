@@ -1,0 +1,41 @@
+@page
+@model DigitalSignage.CMS.Pages.ContentItems.IndexModel
+@{
+    ViewData["Title"] = "Content Items";
+}
+
+<h1>Content Items</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Add Content</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>File Path</th>
+            <th>File Size</th>
+            <th>Upload Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ContentItems)
+{
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.ContentType</td>
+            <td>@item.FilePath</td>
+            <td>@item.FileSize</td>
+            <td>@item.UploadDate</td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Edit</a>
+                <a asp-page="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
