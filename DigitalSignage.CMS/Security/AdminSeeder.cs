@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -38,6 +39,7 @@ public static class AdminSeeder
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(admin, Roles.SuperAdmin);
+            await userManager.AddClaimAsync(admin, new Claim(SentinelClaims.MustChangePassword, "true"));
 
             logger.LogWarning(
                 "No admin account existed, so a SuperAdmin account was created automatically. Username: '{Username}', Password: '{Password}'. Change this password after logging in.",

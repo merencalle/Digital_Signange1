@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -64,6 +65,7 @@ public class CreateModel : PageModel
         }
 
         await _userManager.AddToRoleAsync(user, Role);
+        await _userManager.AddClaimAsync(user, new Claim(SentinelClaims.MustChangePassword, "true"));
 
         if (Role == Security.Roles.User && OwnedDeviceId is not null)
         {

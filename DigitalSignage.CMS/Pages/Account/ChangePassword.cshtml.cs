@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using DigitalSignage.CMS.Security;
 
 namespace DigitalSignage.CMS.Pages.Account;
 
@@ -23,6 +24,8 @@ public class ChangePasswordModel : PageModel
 
     public bool Success { get; set; }
 
+    public bool IsRequired { get; set; }
+
     public class InputModel
     {
         [Required]
@@ -42,10 +45,13 @@ public class ChangePasswordModel : PageModel
 
     public void OnGet()
     {
+        IsRequired = User.HasClaim(c => c.Type == SentinelClaims.MustChangePassword);
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
+        IsRequired = User.HasClaim(c => c.Type == SentinelClaims.MustChangePassword);
+
         if (!ModelState.IsValid)
         {
             return Page();
@@ -64,8 +70,15 @@ public class ChangePasswordModel : PageModel
             return Page();
         }
 
+        var mustChangeClaim = (await _userManager.GetClaimsAsync(user)).FirstOrDefault(c => c.Type == SentinelClaims.MustChangePassword);
+        if (mustChangeClaim is not null)
+        {
+            await _userManager.RemoveClaimAsync(user, mustChangeClaim);
+        }
+
         await _signInManager.RefreshSignInAsync(user);
         Success = true;
+        IsRequired = false;
         Input = new InputModel();
         return Page();
     }

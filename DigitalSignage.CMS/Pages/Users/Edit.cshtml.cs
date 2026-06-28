@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
+using DigitalSignage.CMS.Security;
 
 namespace DigitalSignage.CMS.Pages.Users;
 
@@ -79,6 +81,13 @@ public class EditModel : PageModel
                 ErrorMessage = string.Join(" ", resetResult.Errors.Select(e => e.Description));
                 await LoadDeviceOptionsAsync(OwnedDeviceId);
                 return Page();
+            }
+
+            // An admin-set password is a temporary one - force a change on next login.
+            var existingClaims = await _userManager.GetClaimsAsync(user);
+            if (!existingClaims.Any(c => c.Type == SentinelClaims.MustChangePassword))
+            {
+                await _userManager.AddClaimAsync(user, new Claim(SentinelClaims.MustChangePassword, "true"));
             }
         }
 
