@@ -15,10 +15,23 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Device> Devices { get; set; } = null!;
     public DbSet<ContentItem> ContentItems { get; set; } = null!;
     public DbSet<Playlist> Playlists { get; set; } = null!;
+    public DbSet<PlaylistItem> PlaylistItems { get; set; } = null!;
     public DbSet<LogEntry> LogEntries { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<PlaylistItem>()
+            .HasOne(pi => pi.Playlist)
+            .WithMany(p => p.Items)
+            .HasForeignKey(pi => pi.PlaylistId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PlaylistItem>()
+            .HasOne(pi => pi.ContentItem)
+            .WithMany()
+            .HasForeignKey(pi => pi.ContentItemId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

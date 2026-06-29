@@ -11,7 +11,7 @@ public class PendingPlaylistRow
 {
     public Playlist Playlist { get; set; } = new();
     public string SubmittedByName { get; set; } = "(unknown)";
-    public List<ContentItem> Items { get; set; } = new();
+    public List<PlaylistItem> Items { get; set; } = new();
 }
 
 public class IndexModel : PageModel
@@ -32,6 +32,8 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var playlists = await _context.Playlists
+            .Include(p => p.Items.OrderBy(i => i.Order))
+            .ThenInclude(i => i.ContentItem)
             .Where(p => p.Status == PlaylistStatus.PendingApproval)
             .OrderBy(p => p.SubmittedAt)
             .ToListAsync();
@@ -42,15 +44,11 @@ public class IndexModel : PageModel
                 ? null
                 : await _userManager.FindByIdAsync(playlist.SubmittedByUserId);
 
-            var items = await _context.ContentItems
-                .Where(c => playlist.ContentIds.Contains(c.Id))
-                .ToListAsync();
-
             Pending.Add(new PendingPlaylistRow
             {
                 Playlist = playlist,
                 SubmittedByName = submitter?.UserName ?? "(unknown)",
-                Items = items
+                Items = playlist.Items.OrderBy(i => i.Order).ToList()
             });
         }
     }

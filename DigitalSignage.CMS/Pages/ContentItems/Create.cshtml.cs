@@ -10,14 +10,14 @@ public class CreateModel : PageModel
 {
     private readonly AppDbContext _context;
     private readonly MediaConversionService _conversionService;
-    private readonly IWebHostEnvironment _environment;
+    private readonly DataPaths _dataPaths;
     private readonly ILogger<CreateModel> _logger;
 
-    public CreateModel(AppDbContext context, MediaConversionService conversionService, IWebHostEnvironment environment, ILogger<CreateModel> logger)
+    public CreateModel(AppDbContext context, MediaConversionService conversionService, DataPaths dataPaths, ILogger<CreateModel> logger)
     {
         _context = context;
         _conversionService = conversionService;
-        _environment = environment;
+        _dataPaths = dataPaths;
         _logger = logger;
     }
 
@@ -57,7 +57,7 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        var mediaDirectory = Path.Combine(_environment.WebRootPath, "media");
+        var mediaDirectory = _dataPaths.MediaPath;
         Directory.CreateDirectory(mediaDirectory);
 
         var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{extension}");

@@ -56,7 +56,7 @@ else
                             break;
                     }
                 </p>
-                <p class="text-muted small mb-0">@Model.MyPlaylist.ContentIds.Count content item(s)</p>
+                <p class="text-muted small mb-0">@Model.MyPlaylist.Items.Count content item(s)</p>
                 @if (Model.MyPlaylist.Status == "Rejected" && Model.MyPlaylist.RejectionReason is not null)
                 {
                     <div class="alert alert-danger mt-2 mb-0"><i class="bi bi-exclamation-triangle-fill"></i> @Model.MyPlaylist.RejectionReason</div>

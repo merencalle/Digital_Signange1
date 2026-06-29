@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
+using DigitalSignage.CMS.Models;
 using DigitalSignage.Shared.Models;
 
 namespace DigitalSignage.CMS.Pages.MyPlayer;
@@ -23,9 +23,8 @@ public class EditPlaylistModel : PageModel
     public string PlaylistName { get; set; } = string.Empty;
 
     [BindProperty]
-    public List<int> SelectedContentIds { get; set; } = new();
+    public List<PlaylistItemRow> Rows { get; set; } = new();
 
-    public List<SelectListItem> ContentItemOptions { get; set; } = new();
     public Playlist? Playlist { get; set; }
     public Device? MyDevice { get; set; }
     public string? Message { get; set; }
@@ -41,13 +40,12 @@ public class EditPlaylistModel : PageModel
 
         if (MyDevice.PlaylistId is not null)
         {
-            Playlist = await _context.Playlists.FindAsync(MyDevice.PlaylistId.Value);
+            Playlist = await _context.Playlists.Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == MyDevice.PlaylistId.Value);
         }
 
         PlaylistName = Playlist?.Name ?? $"{MyDevice.Name} Playlist";
-        SelectedContentIds = Playlist?.ContentIds ?? new();
+        await LoadRowsAsync(Playlist?.Items.ToDictionary(i => i.ContentItemId) ?? new());
 
-        await LoadContentItemOptionsAsync();
         return Page();
     }
 
@@ -64,7 +62,7 @@ public class EditPlaylistModel : PageModel
         }
 
         var playlist = MyDevice.PlaylistId is not null
-            ? await _context.Playlists.FindAsync(MyDevice.PlaylistId.Value)
+            ? await _context.Playlists.Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == MyDevice.PlaylistId.Value)
             : null;
 
         if (playlist is null)
@@ -79,13 +77,21 @@ public class EditPlaylistModel : PageModel
             ErrorMessage = "This playlist is currently pending approval and can't be edited until a Manager reviews it.";
             Playlist = playlist;
             PlaylistName = playlist.Name;
-            SelectedContentIds = playlist.ContentIds;
-            await LoadContentItemOptionsAsync();
+            await LoadRowsAsync(playlist.Items.ToDictionary(i => i.ContentItemId));
             return Page();
         }
 
         playlist.Name = PlaylistName;
-        playlist.ContentIds = SelectedContentIds;
+        playlist.Items.Clear();
+        playlist.Items.AddRange(Rows
+            .Where(r => r.Selected)
+            .OrderBy(r => r.Order)
+            .Select(r => new PlaylistItem
+            {
+                ContentItemId = r.ContentItemId,
+                Order = r.Order,
+                DurationSeconds = r.DurationSeconds > 0 ? r.DurationSeconds : 8
+            }));
         playlist.Status = submit ? PlaylistStatus.PendingApproval : PlaylistStatus.Draft;
         if (submit)
         {
@@ -97,7 +103,7 @@ public class EditPlaylistModel : PageModel
 
         Message = submit ? "Submitted for approval." : "Draft saved.";
         Playlist = playlist;
-        await LoadContentItemOptionsAsync();
+        await LoadRowsAsync(playlist.Items.ToDictionary(i => i.ContentItemId));
         return Page();
     }
 
@@ -107,9 +113,21 @@ public class EditPlaylistModel : PageModel
         return await _context.Devices.FirstOrDefaultAsync(d => d.OwnerUserId == userId);
     }
 
-    private async Task LoadContentItemOptionsAsync()
+    private async Task LoadRowsAsync(Dictionary<int, PlaylistItem> existingByContentId)
     {
         var items = await _context.ContentItems.OrderBy(c => c.Name).ToListAsync();
-        ContentItemOptions = items.Select(c => new SelectListItem($"{c.Name} ({c.ContentType})", c.Id.ToString())).ToList();
+        Rows = items.Select((c, index) =>
+        {
+            var existing = existingByContentId.GetValueOrDefault(c.Id);
+            return new PlaylistItemRow
+            {
+                ContentItemId = c.Id,
+                ContentItemName = c.Name,
+                ContentItemType = c.ContentType,
+                Selected = existing is not null,
+                Order = existing?.Order ?? index,
+                DurationSeconds = existing?.DurationSeconds ?? 8
+            };
+        }).ToList();
     }
 }

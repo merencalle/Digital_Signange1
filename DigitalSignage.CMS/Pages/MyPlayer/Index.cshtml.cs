@@ -27,7 +27,7 @@ public class IndexModel : PageModel
 
         if (MyDevice?.PlaylistId is not null)
         {
-            MyPlaylist = await _context.Playlists.FindAsync(MyDevice.PlaylistId.Value);
+            MyPlaylist = await _context.Playlists.Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == MyDevice.PlaylistId.Value);
         }
     }
 }

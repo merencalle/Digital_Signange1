@@ -27,8 +27,11 @@ else
                     @foreach (var item in row.Items)
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @item.Name
-                            <partial name="_ContentTypeBadge" model="@item.ContentType" />
+                            @item.ContentItem.Name
+                            <span>
+                                <partial name="_ContentTypeBadge" model="@item.ContentItem.ContentType" />
+                                <span class="badge text-bg-light border ms-1">@item.DurationSeconds s</span>
+                            </span>
                         </li>
                     }
                 </ul>

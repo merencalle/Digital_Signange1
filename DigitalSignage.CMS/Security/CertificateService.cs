@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using DigitalSignage.CMS.Services;
 
 namespace DigitalSignage.CMS.Security;
 
@@ -15,9 +16,9 @@ public class CertificateService
 {
     private readonly string _certDirectory;
 
-    public CertificateService(IWebHostEnvironment environment)
+    public CertificateService(DataPaths dataPaths)
     {
-        _certDirectory = Path.Combine(environment.ContentRootPath, "App_Data", "certs");
+        _certDirectory = dataPaths.CertDirectory;
         Directory.CreateDirectory(_certDirectory);
     }
 

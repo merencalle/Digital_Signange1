@@ -18,6 +18,6 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Playlists = await _context.Playlists.OrderBy(p => p.Name).ToListAsync();
+        Playlists = await _context.Playlists.Include(p => p.Items).OrderBy(p => p.Name).ToListAsync();
     }
 }

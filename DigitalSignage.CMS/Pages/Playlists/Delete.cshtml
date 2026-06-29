@@ -14,7 +14,7 @@
                     <dd class="col-sm-9">@Model.Playlist.Name</dd>
 
                     <dt class="col-sm-3">Content Items</dt>
-                    <dd class="col-sm-9">@Model.Playlist.ContentIds.Count</dd>
+                    <dd class="col-sm-9">@Model.Playlist.Items.Count</dd>
                 </dl>
                 <form method="post">
                     <input type="hidden" asp-for="Playlist.Id" />

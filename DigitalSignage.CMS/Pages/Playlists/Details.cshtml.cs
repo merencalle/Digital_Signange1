@@ -17,20 +17,21 @@ public class DetailsModel : PageModel
 
     public Playlist Playlist { get; set; } = new();
 
-    public List<ContentItem> Items { get; set; } = new();
+    public List<PlaylistItem> Items { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        var playlist = await _context.Playlists.FindAsync(id);
+        var playlist = await _context.Playlists
+            .Include(p => p.Items.OrderBy(i => i.Order))
+            .ThenInclude(i => i.ContentItem)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (playlist is null)
         {
             return NotFound();
         }
 
         Playlist = playlist;
-        Items = await _context.ContentItems
-            .Where(c => playlist.ContentIds.Contains(c.Id))
-            .ToListAsync();
+        Items = playlist.Items.OrderBy(i => i.Order).ToList();
 
         return Page();
     }

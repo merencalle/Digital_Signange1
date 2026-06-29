@@ -21,11 +21,36 @@
                         <label class="form-label">Playlist Name</label>
                         <input asp-for="PlaylistName" class="form-control" />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Content Items</label>
-                        <select asp-for="SelectedContentIds" asp-items="Model.ContentItemOptions" class="form-select" multiple size="8"></select>
-                        <div class="form-text">Hold Ctrl (Cmd on Mac) to select multiple items. Need new content first? Upload it under "Content" in the sidebar.</div>
-                    </div>
+                    <label class="form-label">Content Items</label>
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th style="width: 8rem;">Order</th>
+                                <th style="width: 10rem;">Duration (sec)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Rows.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" asp-for="Rows[i].ContentItemId" />
+                                        <input type="hidden" asp-for="Rows[i].ContentItemName" />
+                                        <input type="hidden" asp-for="Rows[i].ContentItemType" />
+                                        <input class="form-check-input" type="checkbox" asp-for="Rows[i].Selected" />
+                                    </td>
+                                    <td>@Model.Rows[i].ContentItemName</td>
+                                    <td><partial name="_ContentTypeBadge" model="@Model.Rows[i].ContentItemType" /></td>
+                                    <td><input type="number" class="form-control form-control-sm" asp-for="Rows[i].Order" /></td>
+                                    <td><input type="number" min="1" class="form-control form-control-sm" asp-for="Rows[i].DurationSeconds" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-text mb-3">Duration applies to images. Videos always play their full length. Need new content first? Upload it under "Content" in the sidebar.</div>
                     <div class="d-flex gap-2">
                         <button type="submit" asp-page-handler="SaveDraft" class="btn btn-outline-secondary"><i class="bi bi-save"></i> Save Draft</button>
                         <button type="submit" asp-page-handler="Submit" class="btn btn-primary"><i class="bi bi-send"></i> Submit for Approval</button>

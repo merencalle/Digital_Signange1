@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using DigitalSignage.Shared.Dtos;
 using DigitalSignage.Shared.Models;
 using DigitalSignage.WindowsPlayer.Services;
 
@@ -19,7 +20,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _playlistTimer = new();
     private readonly DispatcherTimer _advanceTimer = new();
 
-    private List<ContentItem> _items = new();
+    private List<PlaylistContentItemDto> _items = new();
     private int _currentIndex = -1;
     private int? _deviceId;
 
@@ -34,7 +35,6 @@ public partial class MainWindow : Window
         // Jittered intervals so a fleet of players doesn't hammer the CMS in lockstep.
         _heartbeatTimer.Interval = JitteredInterval(30);
         _playlistTimer.Interval = JitteredInterval(30);
-        _advanceTimer.Interval = TimeSpan.FromSeconds(8);
 
         _heartbeatTimer.Tick += async (_, _) =>
         {
@@ -115,9 +115,9 @@ public partial class MainWindow : Window
         try
         {
             var playlist = await _api.GetPlaylistAsync(_deviceId.Value);
-            var newItems = playlist?.Items ?? new List<ContentItem>();
+            var newItems = playlist?.Items ?? new List<PlaylistContentItemDto>();
 
-            var changed = newItems.Select(i => i.Id).SequenceEqual(_items.Select(i => i.Id)) == false;
+            var changed = newItems.Select(i => i.ContentItem.Id).SequenceEqual(_items.Select(i => i.ContentItem.Id)) == false;
             if (!changed)
             {
                 return;
@@ -156,7 +156,8 @@ public partial class MainWindow : Window
         }
 
         _currentIndex = (_currentIndex + 1) % _items.Count;
-        var item = _items[_currentIndex];
+        var entry = _items[_currentIndex];
+        var item = entry.ContentItem;
 
         _advanceTimer.Stop();
         VideoDisplay.Stop();
@@ -188,6 +189,7 @@ public partial class MainWindow : Window
             case "Image":
                 ImageDisplay.Source = new BitmapImage(uri);
                 ShowOnly(ImageDisplay);
+                _advanceTimer.Interval = TimeSpan.FromSeconds(entry.DurationSeconds > 0 ? entry.DurationSeconds : 8);
                 _advanceTimer.Start();
                 break;
 

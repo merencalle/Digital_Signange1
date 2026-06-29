@@ -100,22 +100,30 @@ public static class DeviceEndpoints
                 return Results.NoContent();
             }
 
-            var playlist = await db.Playlists.FindAsync(device.PlaylistId.Value);
+            var playlist = await db.Playlists
+                .Include(p => p.Items.OrderBy(i => i.Order))
+                .ThenInclude(i => i.ContentItem)
+                .FirstOrDefaultAsync(p => p.Id == device.PlaylistId.Value);
             if (playlist is null || playlist.Status != Approved)
             {
                 // Draft/PendingApproval/Rejected playlists never reach a live player.
                 return Results.NoContent();
             }
 
-            var items = await db.ContentItems
-                .Where(c => playlist.ContentIds.Contains(c.Id))
-                .ToListAsync();
+            if (!playlist.IsActiveAt(DateTime.Now))
+            {
+                // Outside its scheduled date range/days/time window right now.
+                return Results.NoContent();
+            }
 
             return Results.Ok(new PlaylistContentDto
             {
                 PlaylistId = playlist.Id,
                 PlaylistName = playlist.Name,
-                Items = items
+                Items = playlist.Items
+                    .OrderBy(i => i.Order)
+                    .Select(i => new PlaylistContentItemDto { ContentItem = i.ContentItem, DurationSeconds = i.DurationSeconds })
+                    .ToList()
             });
         });
     }

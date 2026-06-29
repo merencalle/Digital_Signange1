@@ -29,7 +29,7 @@ else
 {
                 <tr>
                     <td>@playlist.Name</td>
-                    <td><span class="badge rounded-pill text-bg-light border">@playlist.ContentIds.Count item(s)</span></td>
+                    <td><span class="badge rounded-pill text-bg-light border">@playlist.Items.Count item(s)</span></td>
                     <td class="text-end">
                         <a asp-page="Edit" asp-route-id="@playlist.Id" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
                         <a asp-page="Details" asp-route-id="@playlist.Id" class="btn btn-sm btn-outline-secondary" title="Details"><i class="bi bi-eye"></i></a>

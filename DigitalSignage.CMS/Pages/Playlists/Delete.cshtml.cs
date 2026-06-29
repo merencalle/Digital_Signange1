@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using DigitalSignage.CMS.Data;
 using DigitalSignage.Shared.Models;
 
@@ -19,7 +20,7 @@ public class DeleteModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        var playlist = await _context.Playlists.FindAsync(id);
+        var playlist = await _context.Playlists.Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == id);
         if (playlist is null)
         {
             return NotFound();
